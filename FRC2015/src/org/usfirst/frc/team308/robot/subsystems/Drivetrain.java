@@ -109,6 +109,14 @@ public class Drivetrain extends PIDSubsystem {
 	}
 
 	public void mecanumDrive(double x, double y, double rotation) {
+		SmartDashboard.putNumber("rf", talonRF.getSpeed());
+		SmartDashboard.putNumber("lf", talonLF.getSpeed());
+		SmartDashboard.putNumber("rb", talonRB.getSpeed());
+		SmartDashboard.putNumber("lb", talonLB.getSpeed());
+		SmartDashboard.putNumber("rf2", talonRF.getClosedLoopError());
+		SmartDashboard.putNumber("lf2", talonLF.getClosedLoopError());
+		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
+		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
 		double lf;// is what will be set to the left front wheel speed
 		double rf;// is what will be set to the right front wheel speed
 		double lb; // is what will be set to the left back wheel speed
@@ -142,30 +150,31 @@ public class Drivetrain extends PIDSubsystem {
 		}
 		// // END MECANUM MATH ////
 
-		talonRF.set(-rf * Globals.talonMaxSpeed);
-		talonLF.set(lf * Globals.talonMaxSpeed);
-		talonRB.set(-rb * Globals.talonMaxSpeed);
-		talonLB.set(lb * Globals.talonMaxSpeed);
+		if (Globals.testMode) { // keep output from -1 to 1
+			talonRF.set(-rf); // invert right front
+			talonLF.set(lf);
+			talonRB.set(-rb); // invert right back
+			talonLB.set(lb);
+		} else { // scale output from -maxspeed to maxspeed
+			talonRF.set(-rf * Globals.talonMaxSpeed); // invert right front
+			talonLF.set(lf * Globals.talonMaxSpeed);
+			talonRB.set(-rb * Globals.talonMaxSpeed); // invert right back
+			talonLB.set(lb * Globals.talonMaxSpeed);
+		}
 	}
 
-	public void normalmode() {
+	public void normalmode() { // sets motors in speed mode (with pid)
 		talonRF.changeControlMode(ControlMode.Speed);
 		talonLF.changeControlMode(ControlMode.Speed);
 		talonRB.changeControlMode(ControlMode.Speed);
 		talonLB.changeControlMode(ControlMode.Speed);
 	}
 
-	public void testmode() {
+	public void testmode() { // sets motors in classic mode (no pid)
 		talonRF.changeControlMode(ControlMode.PercentVbus);
 		talonLF.changeControlMode(ControlMode.PercentVbus);
 		talonRB.changeControlMode(ControlMode.PercentVbus);
 		talonLB.changeControlMode(ControlMode.PercentVbus);
-		mecanumDrive(Robot.oi.joystick1.getX(), Robot.oi.joystick1.getY(),
-				Robot.oi.joystick1.getThrottle());
-	}
-
-	public void rotate(double angle) {
-
 	}
 
 }
