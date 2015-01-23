@@ -13,16 +13,17 @@ package org.usfirst.frc.team308.robot;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.can.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
-import java.util.Vector;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
+ * 
+ * 1/23/2015
+ * 
+ * @version 0.1.0
  */
 public class RobotMap {
 
@@ -54,13 +55,13 @@ public class RobotMap {
 		drivetrainTalonLB = new CANTalon(8);
 		// drivetrainTalonLB2 = new CANTalon(9);
 
-		drivetrainTalonRF.setSafetyEnabled(true);
+		drivetrainTalonRF.setSafetyEnabled(false);
 		// drivetrainTalonRF2.setSafetyEnabled(true);
-		drivetrainTalonLF.setSafetyEnabled(true);
+		drivetrainTalonLF.setSafetyEnabled(false);
 		// drivetrainTalonLF2.setSafetyEnabled(true);
-		drivetrainTalonRB.setSafetyEnabled(true);
+		drivetrainTalonRB.setSafetyEnabled(false);
 		// drivetrainTalonRB2.setSafetyEnabled(true);
-		drivetrainTalonLB.setSafetyEnabled(true);
+		drivetrainTalonLB.setSafetyEnabled(false);
 		// drivetrainTalonLB2.setSafetyEnabled(true);
 
 		// drivetrainTalonRF2.changeControlMode(ControlMode.Follower);
@@ -72,15 +73,19 @@ public class RobotMap {
 		// drivetrainTalonLB2.changeControlMode(ControlMode.Follower);
 		// drivetrainTalonLB2.set(8); // follow talonLB
 
-		/*
-		 * drivetrainTalonRF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		 * drivetrainTalonRF.changeControlMode(ControlMode.Speed);
-		 * drivetrainTalonLF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		 * drivetrainTalonLF.changeControlMode(ControlMode.Speed);
-		 * drivetrainTalonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		 * drivetrainTalonRB.changeControlMode(ControlMode.Speed);
-		 * drivetrainTalonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		 * drivetrainTalonLB.changeControlMode(ControlMode.Speed);
-		 */
+		drivetrainTalonRF.setProfile(0);
+		drivetrainTalonLF.setProfile(0);
+		drivetrainTalonRB.setProfile(0);
+		drivetrainTalonLB.setProfile(0);
+
+		drivetrainTalonRF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		drivetrainTalonRF.changeControlMode(ControlMode.Speed);
+		drivetrainTalonLF.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		drivetrainTalonLF.changeControlMode(ControlMode.Speed);
+		drivetrainTalonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		drivetrainTalonRB.changeControlMode(ControlMode.Speed);
+		drivetrainTalonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		drivetrainTalonLB.changeControlMode(ControlMode.Speed);
+
 	}
 }
