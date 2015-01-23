@@ -37,32 +37,31 @@ public class TeleopDrive extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		SmartDashboard.putBoolean("Test", false);
-		SmartDashboard.putNumber("rf", 0.0);
-		SmartDashboard.putNumber("lf", 0.0);
-		SmartDashboard.putNumber("rb", 0.0);
-		SmartDashboard.putNumber("lb", 0.0);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (!SmartDashboard.getBoolean("Test")) {
-			System.out.println("a");
-			Robot.drivetrain.disablePID();
+		if (Globals.testMode) {
 			Robot.drivetrain.testmode();
+			Robot.drivetrain
+					.mecanumDrive(Robot.oi.joystick1.getX(),
+							Robot.oi.joystick1.getY(),
+							Robot.oi.joystick1.getRawAxis(2));
 		} else {
 			Robot.drivetrain.normalmode();
-			if (Math.abs(Robot.oi.joystick1.getZ()) > 0.15) { // if driver
+			if (Math.abs(Robot.oi.joystick1.getRawAxis(2)) > 0.15) { // if driver
 																// commands
 																// non zero
 																// rotation
 				Robot.drivetrain.disablePID();
-				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
+				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(), // rotate
+																			// as
+																			// commanded
 						Robot.oi.joystick1.getY(), Robot.oi.joystick1.getZ());
 				rotatedzero = false;
 				usepid = false;
-			} else if (!rotatedzero && !usepid) { // called once after joystick
-													// is 0
+			} else if (!rotatedzero && !usepid) { // called once after rotation
+													// becomes 0
 				rotatedzero = true;
 				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
 						Robot.oi.joystick1.getY(), 0);// sets 0 rotation
@@ -74,7 +73,7 @@ public class TeleopDrive extends Command {
 					Robot.drivetrain.enablePID();
 				} else {
 					Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
-							Robot.oi.joystick1.getY(), 0);
+							Robot.oi.joystick1.getY(), 0); // command 0 rotation
 				}
 			} else { // uses pid output to drive straight
 				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
