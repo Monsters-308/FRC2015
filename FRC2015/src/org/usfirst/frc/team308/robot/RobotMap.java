@@ -55,15 +55,20 @@ public class RobotMap {
 		drivetrainTalonLB = new CANTalon(8);
 		// drivetrainTalonLB2 = new CANTalon(9);
 
-		drivetrainTalonRF.setSafetyEnabled(false);
+		drivetrainTalonRF.setSafetyEnabled(true);
 		// drivetrainTalonRF2.setSafetyEnabled(true);
-		drivetrainTalonLF.setSafetyEnabled(false);
+		drivetrainTalonLF.setSafetyEnabled(true);
 		// drivetrainTalonLF2.setSafetyEnabled(true);
-		drivetrainTalonRB.setSafetyEnabled(false);
+		drivetrainTalonRB.setSafetyEnabled(true);
 		// drivetrainTalonRB2.setSafetyEnabled(true);
-		drivetrainTalonLB.setSafetyEnabled(false);
+		drivetrainTalonLB.setSafetyEnabled(true);
 		// drivetrainTalonLB2.setSafetyEnabled(true);
 
+		drivetrainTalonRF.setExpiration(1);
+		drivetrainTalonLF.setExpiration(1);
+		drivetrainTalonRB.setExpiration(1);
+		drivetrainTalonLB.setExpiration(1);
+		
 		// drivetrainTalonRF2.changeControlMode(ControlMode.Follower);
 		// drivetrainTalonRF2.set(2); // follow talonRF
 		// drivetrainTalonLF2.changeControlMode(ControlMode.Follower);
