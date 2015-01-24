@@ -37,49 +37,20 @@ public class TeleopDrive extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		System.out.println("yes");
+		if (Globals.testMode) {
+			Robot.drivetrain.testmode();
+		} else {
+			Robot.drivetrain.normalmode();
+		}
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (Globals.testMode) {
-			Robot.drivetrain.testmode();
 			Robot.drivetrain
 					.mecanumDrive(Robot.oi.joystick1.getX(),
 							Robot.oi.joystick1.getY(),
-							Robot.oi.joystick1.getRawAxis(2));
-		} else {
-			Robot.drivetrain.normalmode();
-			if (Math.abs(Robot.oi.joystick1.getRawAxis(2)) > 0.15) { // if driver
-																// commands
-																// non zero
-																// rotation
-				Robot.drivetrain.disablePID();
-				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(), // rotate
-																			// as
-																			// commanded
-						Robot.oi.joystick1.getY(), Robot.oi.joystick1.getZ());
-				rotatedzero = false;
-				usepid = false;
-			} else if (!rotatedzero && !usepid) { // called once after rotation
-													// becomes 0
-				rotatedzero = true;
-				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
-						Robot.oi.joystick1.getY(), 0);// sets 0 rotation
-			} else if (rotatedzero && !usepid) { // waits for robot to slow down
-													// before activating gryo
-													// PID
-				if (Math.abs(Robot.drivetrain.getGyro()) <= 12) {
-					usepid = true;
-					Robot.drivetrain.enablePID();
-				} else {
-					Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
-							Robot.oi.joystick1.getY(), 0); // command 0 rotation
-				}
-			} else { // uses pid output to drive straight
-				Robot.drivetrain.mecanumDrive(Robot.oi.joystick1.getX(),
-						Robot.oi.joystick1.getY(), Globals.gyroPIDOutput);
-			}
-		}
+							Robot.oi.joystick1.getThrottle());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
