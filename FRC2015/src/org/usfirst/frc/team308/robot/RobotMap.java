@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -55,20 +56,20 @@ public class RobotMap {
 		drivetrainTalonLB = new CANTalon(8);
 		// drivetrainTalonLB2 = new CANTalon(9);
 
-		drivetrainTalonRF.setSafetyEnabled(true);
+		drivetrainTalonRF.setSafetyEnabled(false);
 		// drivetrainTalonRF2.setSafetyEnabled(true);
-		drivetrainTalonLF.setSafetyEnabled(true);
+		drivetrainTalonLF.setSafetyEnabled(false);
 		// drivetrainTalonLF2.setSafetyEnabled(true);
-		drivetrainTalonRB.setSafetyEnabled(true);
+		drivetrainTalonRB.setSafetyEnabled(false);
 		// drivetrainTalonRB2.setSafetyEnabled(true);
-		drivetrainTalonLB.setSafetyEnabled(true);
+		drivetrainTalonLB.setSafetyEnabled(false);
 		// drivetrainTalonLB2.setSafetyEnabled(true);
 
 		drivetrainTalonRF.setExpiration(1);
 		drivetrainTalonLF.setExpiration(1);
 		drivetrainTalonRB.setExpiration(1);
 		drivetrainTalonLB.setExpiration(1);
-		
+
 		// drivetrainTalonRF2.changeControlMode(ControlMode.Follower);
 		// drivetrainTalonRF2.set(2); // follow talonRF
 		// drivetrainTalonLF2.changeControlMode(ControlMode.Follower);
@@ -91,6 +92,14 @@ public class RobotMap {
 		drivetrainTalonRB.changeControlMode(ControlMode.Speed);
 		drivetrainTalonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		drivetrainTalonLB.changeControlMode(ControlMode.Speed);
-
+		
+		drivetrainTalonRF.reverseSensor(true);
+		drivetrainTalonLF.reverseSensor(true);
+		drivetrainTalonRB.reverseSensor(true);
+		drivetrainTalonLB.reverseSensor(true);
+		
+		SmartDashboard.putNumber("gyroP", Globals.gyroP);
+		SmartDashboard.putNumber("gyroI", Globals.gyroI);
+		SmartDashboard.putNumber("gyroD", Globals.gyroD);
 	}
 }
