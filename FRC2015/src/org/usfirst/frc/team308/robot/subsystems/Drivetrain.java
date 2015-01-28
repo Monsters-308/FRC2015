@@ -219,6 +219,14 @@ public class Drivetrain extends PIDSubsystem {
 		talonLF.changeControlMode(ControlMode.Position);
 		talonRB.changeControlMode(ControlMode.Position);
 		talonLB.changeControlMode(ControlMode.Position);
+		talonRF.setPosition(0);
+		talonLF.setPosition(0);
+		talonRB.setPosition(0);
+		talonLB.setPosition(0);
+		talonRF.set(distance);
+		talonLF.set(distance);
+		talonRB.set(distance);
+		talonLB.set(distance);
 	}
 
 	public void normalmode() { // sets motors in speed mode (with pid)
