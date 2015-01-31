@@ -3,6 +3,7 @@ package org.usfirst.frc.team308.robot.subsystems;
 import java.util.Comparator;
 import java.util.Vector;
 
+import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.commands.TrackTote;
 
 import com.ni.vision.NIVision;
@@ -45,6 +46,8 @@ public class Vision extends Subsystem {
 		double ShortAspect;
 		double AreaToConvexHullArea;
 	};
+
+	NIVision.StructuringElement morph = new NIVision.StructuringElement(7, 7, 0);
 
 	// Images
 	public int session;
@@ -112,28 +115,45 @@ public class Vision extends Subsystem {
 		// image20.jpg from the SampleImages folder to the
 		// directory shown below using FTP or SFTP:
 		// http://wpilib.screenstepslive.com/s/4485/m/24166/l/282299-roborio-ftp
+		SmartDashboard.putBoolean("vision", Globals.trackcan);
 		NIVision.IMAQdxGrab(session, frame, 1);
 
 		// Update threshold values from SmartDashboard. For performance
 		// reasons it is recommended to remove this after calibration is
 		// finished.
-		/*TOTE_HUE_RANGE.minValue = (int) SmartDashboard.getNumber(
-				"Tote hue min", TOTE_HUE_RANGE.minValue);
-		TOTE_HUE_RANGE.maxValue = (int) SmartDashboard.getNumber(
-				"Tote hue max", TOTE_HUE_RANGE.maxValue);
-		TOTE_SAT_RANGE.minValue = (int) SmartDashboard.getNumber(
-				"Tote sat min", TOTE_SAT_RANGE.minValue);
-		TOTE_SAT_RANGE.maxValue = (int) SmartDashboard.getNumber(
-				"Tote sat max", TOTE_SAT_RANGE.maxValue);
-		TOTE_VAL_RANGE.minValue = (int) SmartDashboard.getNumber(
-				"Tote val min", TOTE_VAL_RANGE.minValue);
-		TOTE_VAL_RANGE.maxValue = (int) SmartDashboard.getNumber(
-				"Tote val max", TOTE_VAL_RANGE.maxValue);*/
-
-		// Threshold the image looking for yellow (tote color)
-		NIVision.imaqColorThreshold(binaryFrame, frame, 255,
-				NIVision.ColorMode.HSV, TOTE_HUE_RANGE, TOTE_SAT_RANGE,
-				TOTE_VAL_RANGE);
+		/*
+		 * TOTE_HUE_RANGE.minValue = (int) SmartDashboard.getNumber(
+		 * "Tote hue min", TOTE_HUE_RANGE.minValue); TOTE_HUE_RANGE.maxValue =
+		 * (int) SmartDashboard.getNumber( "Tote hue max",
+		 * TOTE_HUE_RANGE.maxValue); TOTE_SAT_RANGE.minValue = (int)
+		 * SmartDashboard.getNumber( "Tote sat min", TOTE_SAT_RANGE.minValue);
+		 * TOTE_SAT_RANGE.maxValue = (int) SmartDashboard.getNumber(
+		 * "Tote sat max", TOTE_SAT_RANGE.maxValue); TOTE_VAL_RANGE.minValue =
+		 * (int) SmartDashboard.getNumber( "Tote val min",
+		 * TOTE_VAL_RANGE.minValue); TOTE_VAL_RANGE.maxValue = (int)
+		 * SmartDashboard.getNumber( "Tote val max", TOTE_VAL_RANGE.maxValue);
+		 */
+		if (Globals.trackcan) {
+			TOTE_HUE_RANGE = new NIVision.Range(60, 140);
+			TOTE_SAT_RANGE = new NIVision.Range(20, 160);
+			TOTE_VAL_RANGE = new NIVision.Range(20, 105);
+			LONG_RATIO = 0.7;
+			SHORT_RATIO = 0.7;
+			// Threshold the image looking for yellow (tote color)
+			NIVision.imaqColorThreshold(binaryFrame, frame, 255,
+					NIVision.ColorMode.HSL, TOTE_HUE_RANGE, TOTE_SAT_RANGE,
+					TOTE_VAL_RANGE);
+		} else {
+			TOTE_HUE_RANGE = new NIVision.Range(24, 49);
+			TOTE_SAT_RANGE = new NIVision.Range(67, 255);
+			TOTE_VAL_RANGE = new NIVision.Range(49, 255);
+			LONG_RATIO = 2.22;
+			SHORT_RATIO = 1.4;
+			// Threshold the image looking for yellow (tote color)
+			NIVision.imaqColorThreshold(binaryFrame, frame, 255,
+					NIVision.ColorMode.HSV, TOTE_HUE_RANGE, TOTE_SAT_RANGE,
+					TOTE_VAL_RANGE);
+		}
 
 		// Send particle count to dashboard
 		int numParticles = NIVision.imaqCountParticles(binaryFrame, 1);
@@ -197,9 +217,16 @@ public class Vision extends Subsystem {
 					.elementAt(0));
 			SmartDashboard.putNumber("Convex Hull Area",
 					scores.AreaToConvexHullArea);
-			boolean isTote = scores.Trapezoid > SCORE_MIN
-					&& (scores.LongAspect > SCORE_MIN || scores.ShortAspect > SCORE_MIN)
-					&& scores.AreaToConvexHullArea > SCORE_MIN;
+			boolean isTote;
+			if (Globals.trackcan) {
+				isTote = scores.Trapezoid > SCORE_MIN
+						&& (scores.LongAspect > 0.5 || scores.ShortAspect > 0.5)
+						&& scores.AreaToConvexHullArea > SCORE_MIN;
+			} else {
+				isTote = scores.Trapezoid > SCORE_MIN
+						&& (scores.LongAspect > SCORE_MIN || scores.ShortAspect > SCORE_MIN)
+						&& scores.AreaToConvexHullArea > SCORE_MIN;
+			}
 			boolean isLong = scores.LongAspect > scores.ShortAspect;
 
 			// Send distance and tote status to dashboard. The bounding
@@ -265,9 +292,15 @@ public class Vision extends Subsystem {
 	 * box area for an ideal tote.
 	 */
 	double TrapezoidScore(ParticleReport report) {
-		return ratioToScore(report.ConvexHullArea
-				/ ((report.BoundingRectRight - report.BoundingRectLeft)
-						* (report.BoundingRectBottom - report.BoundingRectTop) * .954));
+		if (Globals.trackcan) {
+			return ratioToScore(report.ConvexHullArea
+					/ ((report.BoundingRectRight - report.BoundingRectLeft)
+							* (report.BoundingRectBottom - report.BoundingRectTop) * .9));
+		} else {
+			return ratioToScore(report.ConvexHullArea
+					/ ((report.BoundingRectRight - report.BoundingRectLeft)
+							* (report.BoundingRectBottom - report.BoundingRectTop) * .954));
+		}
 	}
 
 	/**
