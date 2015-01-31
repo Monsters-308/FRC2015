@@ -22,4 +22,6 @@ public class Globals {
 
 	// maximum speed of slowest wheel (encoder ticks/100 milliseconds)
 	public static double talonMaxSpeed = 1300.0;
+	
+	public static double trackedToteAngle = 0.0;
 }
