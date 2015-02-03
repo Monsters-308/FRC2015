@@ -4,7 +4,7 @@ import org.usfirst.frc.team308.robot.Globals;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class SwitchVision extends Command{
+public class ToggleTestMode extends Command{
 
 	@Override
 	protected void initialize() {
@@ -22,7 +22,7 @@ public class SwitchVision extends Command{
 
 	@Override
 	protected void end() {
-		Globals.trackCan = !Globals.trackCan;
+		Globals.testMode = !Globals.testMode;
 	}
 
 	@Override

@@ -47,42 +47,49 @@ public class Vision extends Subsystem {
 		double AreaToConvexHullArea;
 	};
 
-	NIVision.StructuringElement morph = new NIVision.StructuringElement(7, 7, 0);
-
 	// Images
-	public int session;
-	Image frame;
-	Image binaryFrame;
-	int imaqError;
+	public volatile int session;
+	volatile Image frame;
+	volatile Image binaryFrame;
+	volatile int imaqError;
 
 	// Constants
-	NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(24, 49); // Default hue
-																// range for
-																// yellow tote
-	NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(67, 255); // Default
-																	// saturation
-																	// range for
-																	// yellow
-																	// tote
-	NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(49, 255); // Default
-																	// value
-																	// range for
-																	// yellow
-																	// tote
-	double AREA_MINIMUM = 0.5; // Default Area minimum for particle as a
-								// percentage of total image area
-	double LONG_RATIO = 2.22; // Tote long side = 26.9 / Tote height = 12.1 =
-								// 2.22
-	double SHORT_RATIO = 1.4; // Tote short side = 16.9 / Tote height = 12.1 =
-								// 1.4
-	double SCORE_MIN = 75.0; // Minimum score to be considered a tote
-	double VIEW_ANGLE = 60.0; // View angle for camera, set to Axis m1011 by
-								// default, 64 for m1013, 51.7 for 206, 52 for
-								// HD3000 square, 60 for HD3000 640x480
-	NIVision.ParticleFilterCriteria2 criteria[] = new NIVision.ParticleFilterCriteria2[1];
-	NIVision.ParticleFilterOptions2 filterOptions = new NIVision.ParticleFilterOptions2(
+	volatile NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(24, 49); // Default
+																			// hue
+	// range for
+	// yellow tote
+	volatile NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(67, 255); // Default
+	// saturation
+	// range for
+	// yellow
+	// tote
+	volatile NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(49, 255); // Default
+	// value
+	// range for
+	// yellow
+	// tote
+	volatile double AREA_MINIMUM = 0.5; // Default Area minimum for particle as
+										// a
+	// percentage of total image area
+	volatile double LONG_RATIO = 2.22; // Tote long side = 26.9 / Tote height =
+										// 12.1 =
+	// 2.22
+	volatile double SHORT_RATIO = 1.4; // Tote short side = 16.9 / Tote height =
+										// 12.1 =
+	// 1.4
+	volatile double SCORE_MIN = 75.0; // Minimum score to be considered a tote
+	volatile double VIEW_ANGLE = 60.0; // View angle for camera, set to Axis
+										// m1011 by
+	// default, 64 for m1013, 51.7 for 206, 52 for
+	// HD3000 square, 60 for HD3000 640x480
+	volatile NIVision.ParticleFilterCriteria2 criteria[] = new NIVision.ParticleFilterCriteria2[1];
+	volatile NIVision.ParticleFilterOptions2 filterOptions = new NIVision.ParticleFilterOptions2(
 			0, 0, 1, 1);
 	Scores scores = new Scores();
+
+	volatile long lasttime = 0;
+	volatile double xpos = 0.0;
+	volatile double ypos = 0.0;
 
 	@Override
 	protected void initDefaultCommand() {
@@ -115,7 +122,7 @@ public class Vision extends Subsystem {
 		// image20.jpg from the SampleImages folder to the
 		// directory shown below using FTP or SFTP:
 		// http://wpilib.screenstepslive.com/s/4485/m/24166/l/282299-roborio-ftp
-		SmartDashboard.putBoolean("vision", Globals.trackcan);
+		SmartDashboard.putBoolean("vision", Globals.trackCan);
 		NIVision.IMAQdxGrab(session, frame, 1);
 
 		// Update threshold values from SmartDashboard. For performance
@@ -133,7 +140,7 @@ public class Vision extends Subsystem {
 		 * TOTE_VAL_RANGE.minValue); TOTE_VAL_RANGE.maxValue = (int)
 		 * SmartDashboard.getNumber( "Tote val max", TOTE_VAL_RANGE.maxValue);
 		 */
-		if (Globals.trackcan) {
+		if (Globals.trackCan) {
 			TOTE_HUE_RANGE = new NIVision.Range(60, 140);
 			TOTE_SAT_RANGE = new NIVision.Range(20, 160);
 			TOTE_VAL_RANGE = new NIVision.Range(20, 105);
@@ -218,7 +225,7 @@ public class Vision extends Subsystem {
 			SmartDashboard.putNumber("Convex Hull Area",
 					scores.AreaToConvexHullArea);
 			boolean isTote;
-			if (Globals.trackcan) {
+			if (Globals.trackCan) {
 				isTote = scores.Trapezoid > SCORE_MIN
 						&& (scores.LongAspect > 0.5 || scores.ShortAspect > 0.5)
 						&& scores.AreaToConvexHullArea > SCORE_MIN;
@@ -240,6 +247,12 @@ public class Vision extends Subsystem {
 									particles.elementAt(0), isLong));
 			// Send masked image to dashboard to assist in tweaking mask.
 			if (isTote) {
+				lasttime = System.currentTimeMillis();
+				xpos = 0.5 * (particles.elementAt(0).BoundingRectLeft
+						+ particles.elementAt(0).BoundingRectRight - Globals.camWidth);
+				ypos = 0.5 * (Globals.camHeight
+						- particles.elementAt(0).BoundingRectTop - particles
+						.elementAt(0).BoundingRectBottom);
 				NIVision.imaqDrawShapeOnImage(
 						frame,
 						frame,
@@ -256,7 +269,6 @@ public class Vision extends Subsystem {
 		} else {
 			SmartDashboard.putBoolean("IsTote", false);
 		}
-
 		Timer.delay(0.05); // wait for a motor update time
 	}
 
@@ -292,7 +304,7 @@ public class Vision extends Subsystem {
 	 * box area for an ideal tote.
 	 */
 	double TrapezoidScore(ParticleReport report) {
-		if (Globals.trackcan) {
+		if (Globals.trackCan) {
 			return ratioToScore(report.ConvexHullArea
 					/ ((report.BoundingRectRight - report.BoundingRectLeft)
 							* (report.BoundingRectBottom - report.BoundingRectTop) * .9));
@@ -350,5 +362,13 @@ public class Vision extends Subsystem {
 		return targetWidth
 				/ (normalizedWidth * 12 * Math.tan(VIEW_ANGLE * Math.PI
 						/ (180 * 2)));
+	}
+
+	public double lastDetected() {
+		return System.currentTimeMillis() - lasttime;
+	}
+
+	public double angleError() {
+		return xpos * Globals.dpx;
 	}
 }

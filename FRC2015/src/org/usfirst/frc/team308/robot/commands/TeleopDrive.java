@@ -10,12 +10,10 @@
 
 package org.usfirst.frc.team308.robot.commands;
 
-import edu.wpi.first.wpilibj.CANTalon.ControlMode;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
@@ -37,20 +35,18 @@ public class TeleopDrive extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		System.out.println("yes");
 		if (Globals.testMode) {
 			Robot.drivetrain.testmode();
 		} else {
 			Robot.drivetrain.normalmode();
+			Robot.drivetrain.enablePID();
 		}
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-			Robot.drivetrain
-					.mecanumDrive(Robot.oi.joystick1.getX(),
-							Robot.oi.joystick1.getY(),
-							Robot.oi.joystick1.getThrottle());
+		Robot.drivetrain.teleop(Robot.oi.joystick1.getX(),
+				Robot.oi.joystick1.getY(), Robot.oi.joystick1.getThrottle());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
