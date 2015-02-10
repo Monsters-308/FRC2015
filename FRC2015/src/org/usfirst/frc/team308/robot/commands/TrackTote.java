@@ -17,8 +17,9 @@ public class TrackTote extends Command {
 
 	@Override
 	protected void initialize() {
-		visionProcessing = new processinparallel();
-		new Thread(visionProcessing).start();// process vision in another thread
+		//NIVision.IMAQdxStartAcquisition(Robot.vision.session);
+		//visionProcessing = new processinparallel();
+		//new Thread(visionProcessing).start();// process vision in another thread
 	}
 
 	@Override
@@ -32,7 +33,8 @@ public class TrackTote extends Command {
 
 	@Override
 	protected void end() {
-		visionProcessing.kill();
+		//visionProcessing.kill();
+		//NIVision.IMAQdxStopAcquisition(Robot.vision.session);
 	}
 
 	@Override
@@ -46,11 +48,9 @@ public class TrackTote extends Command {
 
 		@Override
 		public void run() {
-			NIVision.IMAQdxStartAcquisition(Robot.vision.session);
 			while (running) {
 				Robot.vision.process();
 			}
-			NIVision.IMAQdxStopAcquisition(Robot.vision.session);
 		}
 
 		public void kill() {

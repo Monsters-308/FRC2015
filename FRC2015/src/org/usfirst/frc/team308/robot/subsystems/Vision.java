@@ -98,15 +98,20 @@ public class Vision extends Subsystem {
 
 	public Vision() {
 		// create images
-		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-		session = NIVision.IMAQdxOpenCamera("cam0",
-				NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-		NIVision.IMAQdxConfigureGrab(session);
-		binaryFrame = NIVision.imaqCreateImage(ImageType.IMAGE_U8, 0);
-		criteria[0] = new NIVision.ParticleFilterCriteria2(
-				NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA, AREA_MINIMUM,
-				100.0, 0, 0);
-
+		try {
+			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+			session = NIVision
+					.IMAQdxOpenCamera(
+							"10.163.9.197",
+							NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+			NIVision.IMAQdxConfigureGrab(session);
+			binaryFrame = NIVision.imaqCreateImage(ImageType.IMAGE_U8, 0);
+			criteria[0] = new NIVision.ParticleFilterCriteria2(
+					NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA,
+					AREA_MINIMUM, 100.0, 0, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// Put default values to SmartDashboard so fields will appear
 		SmartDashboard.putNumber("Tote hue min", TOTE_HUE_RANGE.minValue);
 		SmartDashboard.putNumber("Tote hue max", TOTE_HUE_RANGE.maxValue);
@@ -265,10 +270,10 @@ public class Vision extends Subsystem {
 										- particles.elementAt(0).BoundingRectLeft)),
 						DrawMode.DRAW_VALUE, ShapeMode.SHAPE_RECT, 0x2BFF00);
 			}
-			CameraServer.getInstance().setImage(frame);
 		} else {
 			SmartDashboard.putBoolean("IsTote", false);
 		}
+		CameraServer.getInstance().setImage(frame);
 		Timer.delay(0.05); // wait for a motor update time
 	}
 

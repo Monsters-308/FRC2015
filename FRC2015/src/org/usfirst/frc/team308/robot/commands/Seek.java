@@ -23,7 +23,7 @@ public class Seek extends Command {
 			Robot.drivetrain.mecanumDrive(0, 0, Globals.gyroPIDOutput);
 		} else {
 			Robot.drivetrain.disablePID();
-			Robot.drivetrain.mecanumDrive(0, 0, 0.1);
+			Robot.drivetrain.mecanumDrive(0, 0, 0.02);
 		}
 		Timer.delay(0.1);
 	}
