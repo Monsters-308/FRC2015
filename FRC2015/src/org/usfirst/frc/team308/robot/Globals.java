@@ -58,11 +58,12 @@ public class Globals {
 	public static boolean clawOpen = false;
 	public static int clawOpenThreshold = 100;
 	public static int clawClosedThreshold = 10000;
-	public static double clawOpenCurrent = 2.0;
-	public static double clawCloseCurrent = 2.0;
+	public static double clawOpenPower = 0.3;
+	public static double clawClosePower = 0.3;
+	public static double sweeperMaxPercentage = 0.5;
 
 	// calibration
-	public static double calibrationSpeed = 0.0; // from 0.0 to 1.0
+	public static double calibrationSpeed = 0.2; // from 0.0 to 1.0
 
 	// constants
 	public static final double dpx = 60.0 / 640.0; // degrees per camera pixel

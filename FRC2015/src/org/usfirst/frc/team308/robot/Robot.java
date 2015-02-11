@@ -46,6 +46,8 @@ public class Robot extends IterativeRobot {
 	public static Vision vision;
 	public static Arm arm;
 	public static Claw claw;
+	public static UltraSonic ultrasonic;
+	public static Pneumatics pneumatics;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -60,6 +62,8 @@ public class Robot extends IterativeRobot {
 		vision = new Vision();
 		arm = new Arm();
 		claw = new Claw();
+		ultrasonic = new UltraSonic();
+		pneumatics = new Pneumatics();
 		// OI must be constructed after subsystems. If the OI creates Commands
 		// (which it very likely will), subsystems are not guaranteed to be
 		// constructed yet. Thus, their requires() statements may grab null
@@ -71,6 +75,7 @@ public class Robot extends IterativeRobot {
 
 		autoChooser.addDefault("Square Auton", new SquareAuton());
 		autoChooser.addObject("Vision Seeker", new Seek());
+		autoChooser.addObject("Calibrate", new ClawCalibration());
 
 		SmartDashboard.putData("Autonomous Mode", autoChooser);
 

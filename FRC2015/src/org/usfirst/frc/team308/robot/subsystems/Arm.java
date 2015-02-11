@@ -25,7 +25,6 @@ public class Arm extends Subsystem {
 		// TODO tune lift PID
 		liftR.setPID(Globals.liftP, Globals.liftI, Globals.liftD, 0.0,
 				Globals.liftIZone, Globals.talonRampRate, 0);
-
 		liftR.reverseOutput(true);
 		liftR.enableControl();
 		liftL.enableControl();
@@ -39,6 +38,8 @@ public class Arm extends Subsystem {
 	public void reset() {
 		liftR.setPosition(0);
 		liftR.ClearIaccum();
+		liftR.set(0);
+		//TODO only reset during enabled
 	}
 
 	public void putValues() {

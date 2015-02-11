@@ -3,30 +3,30 @@ package org.usfirst.frc.team308.robot.commands;
 import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class CalibrateClaw extends Command {
+public class RunSensor extends Command {
 
-	public CalibrateClaw() {
-		requires(Robot.claw);
+	public RunSensor() {
+		requires(Robot.ultrasonic);
 	}
-	
+
 	@Override
 	protected void initialize() {
-		Robot.claw.startCalibration();
 	}
 
 	@Override
 	protected void execute() {
+		SmartDashboard.putNumber("Sonic Distance", Robot.ultrasonic.getDistance());
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.claw.limitSwitch();
+		return false;
 	}
 
 	@Override
 	protected void end() {
-		Robot.claw.stopCalibration();
 	}
 
 	@Override

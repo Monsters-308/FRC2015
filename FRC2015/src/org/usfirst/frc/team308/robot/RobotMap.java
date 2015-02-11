@@ -10,12 +10,15 @@
 
 package org.usfirst.frc.team308.robot;
 
+import org.usfirst.frc.team308.robot.subsystems.UltraSonic;
+
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -47,6 +50,8 @@ public class RobotMap {
 	public static CANTalon clawTalon;
 	public static CANTalon sweeperTalon;
 	public static CANTalon sweeperTalon2;
+
+	public static Ultrasonic distanceSensor;
 	// pneumatics drawerslides 0
 	// pneumatics claw tilt 1
 
@@ -93,5 +98,7 @@ public class RobotMap {
 		clawTalon.setSafetyEnabled(false);
 		sweeperTalon.setSafetyEnabled(false);
 		sweeperTalon2.setSafetyEnabled(false);
+
+		distanceSensor = new Ultrasonic(0, 1, Unit.kInches);
 	}
 }
