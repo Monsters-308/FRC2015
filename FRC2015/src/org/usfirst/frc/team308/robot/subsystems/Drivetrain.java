@@ -11,14 +11,12 @@
 package org.usfirst.frc.team308.robot.subsystems;
 
 import org.usfirst.frc.team308.robot.Globals;
-import org.usfirst.frc.team308.robot.Robot;
 import org.usfirst.frc.team308.robot.RobotMap;
 import org.usfirst.frc.team308.robot.commands.*;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.can.*;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

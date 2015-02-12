@@ -10,18 +10,11 @@
 
 package org.usfirst.frc.team308.robot;
 
-import org.usfirst.frc.team308.robot.subsystems.UltraSonic;
-
-import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.CANTalon.ControlMode;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -52,6 +45,10 @@ public class RobotMap {
 	public static CANTalon sweeperTalon2;
 
 	public static Ultrasonic distanceSensor;
+
+	public static Compressor compressor;
+	public static DoubleSolenoid drawerSlides;
+	public static DoubleSolenoid clawTilt;
 	// pneumatics drawerslides 0
 	// pneumatics claw tilt 1
 
@@ -100,5 +97,9 @@ public class RobotMap {
 		sweeperTalon2.setSafetyEnabled(false);
 
 		distanceSensor = new Ultrasonic(0, 1, Unit.kInches);
+
+		compressor = new Compressor(0);
+		drawerSlides = new DoubleSolenoid(0, 1);
+		clawTilt = new DoubleSolenoid(2, 3);
 	}
 }
