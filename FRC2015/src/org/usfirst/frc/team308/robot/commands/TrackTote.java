@@ -2,9 +2,6 @@ package org.usfirst.frc.team308.robot.commands;
 
 import org.usfirst.frc.team308.robot.Robot;
 
-import com.ni.vision.NIVision;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TrackTote extends Command {
@@ -17,9 +14,8 @@ public class TrackTote extends Command {
 
 	@Override
 	protected void initialize() {
-		//NIVision.IMAQdxStartAcquisition(Robot.vision.session);
-		//visionProcessing = new processinparallel();
-		//new Thread(visionProcessing).start();// process vision in another thread
+		visionProcessing = new processinparallel();
+		new Thread(visionProcessing).start();// process vision in another thread
 	}
 
 	@Override
@@ -33,8 +29,7 @@ public class TrackTote extends Command {
 
 	@Override
 	protected void end() {
-		//visionProcessing.kill();
-		//NIVision.IMAQdxStopAcquisition(Robot.vision.session);
+		visionProcessing.kill();
 	}
 
 	@Override

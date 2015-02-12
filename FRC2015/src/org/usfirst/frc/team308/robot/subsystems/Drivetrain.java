@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends PIDSubsystem {
 
 	Gyro gyro = RobotMap.drivetrainGyro;
+	Gyro gyro2 = RobotMap.drivetrainGyro2;
 	CANTalon talonRF = RobotMap.drivetrainTalonRF;
 	CANTalon talonRF2 = RobotMap.drivetrainTalonRF2;
 	CANTalon talonLF = RobotMap.drivetrainTalonLF;
@@ -169,7 +170,7 @@ public class Drivetrain extends PIDSubsystem {
 		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
 		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
 		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
-		SmartDashboard.putNumber("gyro", gyro.getAngle());
+		SmartDashboard.putNumber("gyro", gyro2.getAngle());
 		SmartDashboard.putNumber("gyroError", getPIDController().getError());
 		double lf;// is what will be set to the left front wheel speed
 		double rf;// is what will be set to the right front wheel speed

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
 
 public class Vision extends Subsystem {
 
@@ -48,7 +49,6 @@ public class Vision extends Subsystem {
 	};
 
 	// Images
-	public volatile int session;
 	volatile Image frame;
 	volatile Image binaryFrame;
 	volatile int imaqError;
@@ -91,6 +91,8 @@ public class Vision extends Subsystem {
 	volatile double xpos = 0.0;
 	volatile double ypos = 0.0;
 
+	volatile AxisCamera camera;
+
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new TrackTote());
@@ -100,12 +102,8 @@ public class Vision extends Subsystem {
 		// create images
 		try {
 			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-			session = NIVision
-					.IMAQdxOpenCamera(
-							"10.163.9.197",
-							NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-			NIVision.IMAQdxConfigureGrab(session);
 			binaryFrame = NIVision.imaqCreateImage(ImageType.IMAGE_U8, 0);
+			camera = new AxisCamera("10.3.8.22");
 			criteria[0] = new NIVision.ParticleFilterCriteria2(
 					NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA,
 					AREA_MINIMUM, 100.0, 0, 0);
@@ -128,8 +126,7 @@ public class Vision extends Subsystem {
 		// directory shown below using FTP or SFTP:
 		// http://wpilib.screenstepslive.com/s/4485/m/24166/l/282299-roborio-ftp
 		SmartDashboard.putBoolean("vision", Globals.trackCan);
-		NIVision.IMAQdxGrab(session, frame, 1);
-
+		camera.getImage(frame);
 		// Update threshold values from SmartDashboard. For performance
 		// reasons it is recommended to remove this after calibration is
 		// finished.

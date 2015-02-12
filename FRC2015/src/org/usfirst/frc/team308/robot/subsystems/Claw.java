@@ -8,6 +8,7 @@ import org.usfirst.frc.team308.robot.commands.ClawManager;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -63,7 +64,8 @@ public class Claw extends Subsystem {
 				.putBoolean("limit2", clawRotate.isRevLimitSwitchClosed());
 		SmartDashboard.putNumber("Claw grab posistion", claw.getPosition());
 		addRotate(Globals.liftSpeed * Robot.oi.codriver.getZ());
-		if (!Robot.oi.codriver.getRawButton(6)) {
+		if (!Robot.oi.codriver.getRawButton(6)
+				|| (DriverStation.getInstance().isAutonomous() && Globals.clawOpen)) {
 			if (claw.getPosition() >= Globals.clawOpenThreshold) {
 				claw.set(-Globals.clawOpenPower);
 			} else {
@@ -92,14 +94,14 @@ public class Claw extends Subsystem {
 		setDefaultCommand(new ClawManager());
 	}
 
-	public int rotateError(){
+	public int rotateError() {
 		return clawRotate.getClosedLoopError();
 	}
-	
+
 	public void preCalibration() {
 		clawRotate.changeControlMode(ControlMode.Position);
 		if (clawRotate.isRevLimitSwitchClosed()) {
-			clawRotate.set(clawRotate.getPosition()+500);
+			clawRotate.set(clawRotate.getPosition() + 500);
 		} else {
 			clawRotate.set(clawRotate.getPosition());
 		}
