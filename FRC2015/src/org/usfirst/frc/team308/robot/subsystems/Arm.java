@@ -2,7 +2,7 @@ package org.usfirst.frc.team308.robot.subsystems;
 
 import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.RobotMap;
-import org.usfirst.frc.team308.robot.commands.testcommand;
+import org.usfirst.frc.team308.robot.commands.ArmManager;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
@@ -32,14 +32,14 @@ public class Arm extends Subsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new testcommand());
+		setDefaultCommand(new ArmManager());
 	}
 
 	public void reset() {
 		liftR.setPosition(0);
 		liftR.ClearIaccum();
 		liftR.set(0);
-		//TODO only reset during enabled
+		// TODO only reset during enabled
 	}
 
 	public void putValues() {
@@ -49,16 +49,33 @@ public class Arm extends Subsystem {
 	}
 
 	public void addHeight(double height) {
-		liftR.set(liftR.getSetpoint() + height);
+		if (liftR.getSetpoint() + height > Globals.armSoftLimitMax) {
+			liftR.set(Globals.armSoftLimitMax);
+		} else if (liftR.getSetpoint() + height < Globals.armSoftLimitMin) {
+			liftR.set(Globals.armSoftLimitMin);
+		} else {
+			liftR.set(liftR.getSetpoint() + height);
+		}
 	}
 
 	public void setHeight(double height) {
-		liftR.set(height);
+		if (height > Globals.armSoftLimitMax) {
+			liftR.set(Globals.armSoftLimitMax);
+		} else if (height < Globals.armSoftLimitMin) {
+			liftR.set(Globals.armSoftLimitMin);
+		} else {
+			liftR.set(height);
+		}
 	}
 
 	public boolean onTarget() {
 		return (Math.abs(liftR.getClosedLoopError()) < Globals.lifttolerance)
 				&& (Math.abs(liftR.getSpeed()) < Globals.liftspeedtolerance);
+	}
+
+	public void preCalibration() {
+		liftR.changeControlMode(ControlMode.PercentVbus);
+		liftR.set(Globals.calibrationSpeed);
 	}
 
 	public void startCalibration() {
@@ -73,6 +90,6 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean limitSwitch() {
-		return liftR.isFwdLimitSwitchClosed();
+		return liftR.isRevLimitSwitchClosed();
 	}
 }

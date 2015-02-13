@@ -118,15 +118,15 @@ public class Drivetrain extends PIDSubsystem {
 
 	public double getSpeed() {
 		// TODO verify speeds have the correct sign
-		return 0.25 * (talonRF.getEncVelocity() + talonLF.getEncVelocity()
-				+ talonRB.getEncVelocity() + talonLB.getEncVelocity());
+		return 0.25 * (-talonRF.getEncVelocity() + talonLF.getEncVelocity()
+				- talonRB.getEncVelocity() + talonLB.getEncVelocity());
 	}
 
 	public double getDriveError() {
-		return 0.25
-				* (talonRF.getClosedLoopError() + talonLF.getClosedLoopError()
-						+ talonRB.getClosedLoopError() + talonLB
-							.getClosedLoopError()) / Globals.ticksToFeet;
+		return 0.25 * (Math.abs(talonRF.getClosedLoopError())
+				+ Math.abs(talonLF.getClosedLoopError())
+				+ Math.abs(talonRB.getClosedLoopError()) + Math.abs(talonLB
+				.getClosedLoopError()));
 	}
 
 	public void disablePID() {
@@ -161,17 +161,7 @@ public class Drivetrain extends PIDSubsystem {
 	}
 
 	public void mecanumDrive(double x, double y, double rotation) {
-		SmartDashboard.putNumber("rf", talonRF.getSpeed());
-		SmartDashboard.putNumber("lf", talonLF.getSpeed());
-		SmartDashboard.putNumber("rb", talonRB.getSpeed());
-		SmartDashboard.putNumber("lb", talonLB.getSpeed());
-		SmartDashboard.putNumber("rf2", talonRF.getClosedLoopError());
-		SmartDashboard.putNumber("lf2", talonLF.getClosedLoopError());
-		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
-		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
-		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
-		SmartDashboard.putNumber("gyro", gyro2.getAngle());
-		SmartDashboard.putNumber("gyroError", getPIDController().getError());
+		putDashboard();
 		double lf;// is what will be set to the left front wheel speed
 		double rf;// is what will be set to the right front wheel speed
 		double lb; // is what will be set to the left back wheel speed
@@ -239,20 +229,31 @@ public class Drivetrain extends PIDSubsystem {
 		setSetpoint(angle);
 	}
 
-	public void drive(double distance) {
+	public void drive(double distance, boolean strafe) {
 		// TODO verify signs
 		talonRF.changeControlMode(ControlMode.Position);
 		talonLF.changeControlMode(ControlMode.Position);
 		talonRB.changeControlMode(ControlMode.Position);
 		talonLB.changeControlMode(ControlMode.Position);
+		talonRF.setProfile(1);
+		talonLF.setProfile(1);
+		talonRB.setProfile(1);
+		talonLB.setProfile(1);
 		talonRF.setPosition(0);
 		talonLF.setPosition(0);
 		talonRB.setPosition(0);
 		talonLB.setPosition(0);
-		talonRF.set(-distance * Globals.ticksToFeet);
-		talonLF.set(distance * Globals.ticksToFeet);
-		talonRB.set(-distance * Globals.ticksToFeet);
-		talonLB.set(distance * Globals.ticksToFeet);
+		if (strafe) {
+			talonRF.set(distance);
+			talonLF.set(distance);
+			talonRB.set(-distance);
+			talonLB.set(-distance);
+		} else {
+			talonRF.set(-distance);
+			talonLF.set(distance);
+			talonRB.set(-distance);
+			talonLB.set(distance);
+		}
 	}
 
 	public void normalmode() { // sets motors in speed mode (with pid)
@@ -260,6 +261,10 @@ public class Drivetrain extends PIDSubsystem {
 		talonLF.changeControlMode(ControlMode.Speed);
 		talonRB.changeControlMode(ControlMode.Speed);
 		talonLB.changeControlMode(ControlMode.Speed);
+		talonRF.setProfile(0);
+		talonLF.setProfile(0);
+		talonRB.setProfile(0);
+		talonLB.setProfile(0);
 		talonRF.enableControl();
 		talonRF2.enableControl();
 		talonLF.enableControl();
@@ -268,6 +273,7 @@ public class Drivetrain extends PIDSubsystem {
 		talonRB2.enableControl();
 		talonLB.enableControl();
 		talonLB2.enableControl();
+		gyro.reset();
 	}
 
 	public void testmode() { // sets motors in classic mode (no pid)
@@ -283,6 +289,20 @@ public class Drivetrain extends PIDSubsystem {
 		talonRB2.enableControl();
 		talonLB.enableControl();
 		talonLB2.enableControl();
+	}
+
+	public void putDashboard() {
+		SmartDashboard.putNumber("rf", talonRF.getSpeed());
+		SmartDashboard.putNumber("lf", talonLF.getSpeed());
+		SmartDashboard.putNumber("rb", talonRB.getSpeed());
+		SmartDashboard.putNumber("lb", talonLB.getSpeed());
+		SmartDashboard.putNumber("rf2", talonRF.getClosedLoopError());
+		SmartDashboard.putNumber("lf2", talonLF.getClosedLoopError());
+		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
+		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
+		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
+		SmartDashboard.putNumber("gyrorate", gyro2.getRate());
+		SmartDashboard.putNumber("gyroError", getPIDController().getError());
 	}
 
 }

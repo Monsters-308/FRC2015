@@ -4,15 +4,15 @@ import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class PreCalibrateClaw extends Command {
+public class PreCalibrateArm extends Command {
 
-	public PreCalibrateClaw() {
-		requires(Robot.claw);
+	public PreCalibrateArm() {
+		requires(Robot.arm);
 	}
 
 	@Override
 	protected void initialize() {
-		Robot.claw.preCalibration();
+		Robot.arm.preCalibration();
 	}
 
 	@Override
@@ -21,12 +21,11 @@ public class PreCalibrateClaw extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return !Robot.claw.limitSwitch();
+		return !Robot.arm.limitSwitch();
 	}
 
 	@Override
 	protected void end() {
-		
 	}
 
 	@Override

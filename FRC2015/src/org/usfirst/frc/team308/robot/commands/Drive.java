@@ -9,20 +9,22 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Drive extends Command {
 
 	double dist = 0.0;
+	boolean strafe = false;
 
-	public Drive(double distance) {
+	public Drive(double distance, boolean straffe) {
 		requires(Robot.drivetrain);
 		dist = distance;
+		strafe = straffe;
 	}
 
 	@Override
 	protected void initialize() {
-		Robot.drivetrain.drive(dist);
+		Robot.drivetrain.drive(dist, strafe);
 	}
 
 	@Override
 	protected void execute() {
-		Timer.delay(0.1);
+		Robot.drivetrain.putDashboard();
 	}
 
 	@Override

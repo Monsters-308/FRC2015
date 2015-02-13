@@ -4,11 +4,10 @@ import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class testcommand extends Command {
+public class ArmManager extends Command {
 
-	public testcommand() {
+	public ArmManager() {
 		requires(Robot.arm);
 	}
 
@@ -19,8 +18,7 @@ public class testcommand extends Command {
 
 	@Override
 	protected void execute() {
-		Robot.arm
-				.addHeight(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
+		Robot.arm.addHeight(Globals.liftSpeed * Robot.oi.codriver.getZ());
 		Robot.arm.putValues();
 	}
 

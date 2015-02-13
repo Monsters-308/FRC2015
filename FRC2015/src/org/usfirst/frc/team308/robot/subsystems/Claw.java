@@ -63,8 +63,8 @@ public class Claw extends Subsystem {
 		SmartDashboard
 				.putBoolean("limit2", clawRotate.isRevLimitSwitchClosed());
 		SmartDashboard.putNumber("Claw grab posistion", claw.getPosition());
-		addRotate(Globals.liftSpeed * Robot.oi.codriver.getZ());
-		if (!Robot.oi.codriver.getRawButton(6)
+		addRotate(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
+		if (!Robot.oi.codriver.getRawButton(1)
 				|| (DriverStation.getInstance().isAutonomous() && Globals.clawOpen)) {
 			if (claw.getPosition() >= Globals.clawOpenThreshold) {
 				claw.set(-Globals.clawOpenPower);
@@ -82,11 +82,23 @@ public class Claw extends Subsystem {
 	}
 
 	public void addRotate(double pos) {
-		clawRotate.set(clawRotate.getSetpoint() + pos);
+		if (clawRotate.getSetpoint() + pos > Globals.clawRotateSoftLimitMax) {
+			clawRotate.set(Globals.clawRotateSoftLimitMax);
+		} else if (clawRotate.getSetpoint() + pos < Globals.clawRotateSoftLimitMin) {
+			clawRotate.set(Globals.clawRotateSoftLimitMin);
+		} else {
+			clawRotate.set(clawRotate.getSetpoint() + pos);
+		}
 	}
 
 	public void rotateClaw(double pos) {
-		clawRotate.set(pos);
+		if (pos > Globals.clawRotateSoftLimitMax) {
+			clawRotate.set(Globals.clawRotateSoftLimitMax);
+		} else if (pos < Globals.clawRotateSoftLimitMin) {
+			clawRotate.set(Globals.clawRotateSoftLimitMin);
+		} else {
+			clawRotate.set(pos);
+		}
 	}
 
 	@Override
@@ -99,12 +111,8 @@ public class Claw extends Subsystem {
 	}
 
 	public void preCalibration() {
-		clawRotate.changeControlMode(ControlMode.Position);
-		if (clawRotate.isRevLimitSwitchClosed()) {
-			clawRotate.set(clawRotate.getPosition() + 500);
-		} else {
-			clawRotate.set(clawRotate.getPosition());
-		}
+		clawRotate.changeControlMode(ControlMode.PercentVbus);
+		clawRotate.set(Globals.calibrationSpeed);
 	}
 
 	public void startCalibration() {
@@ -119,7 +127,7 @@ public class Claw extends Subsystem {
 	}
 
 	public boolean limitSwitch() {
-		return clawRotate.isFwdLimitSwitchClosed();
+		return clawRotate.isRevLimitSwitchClosed();
 	}
 
 }

@@ -17,12 +17,12 @@ public class Globals {
 	public static double gyrocorrection = 0.0;
 
 	// motor position PID constants
-	public static double talonP = 0.01;// 0.012;
+	public static double talonP = 0.1;// 0.012;
 	public static double talonI = 0.0;// 0.002;
 	public static double talonD = 0.0;
 	public static int iZone = 0;
 
-	public static double distancetolerance = 0.2; // in feet
+	public static double distancetolerance = 100; // in ticks
 	public static double speedtolerance = 50.0; // encoder ticks/100
 												// milliseconds
 
@@ -39,12 +39,16 @@ public class Globals {
 	public static int lifttolerance = 0; // not important
 	public static int liftspeedtolerance = 0; // not important
 	public static double liftSpeed = 250.0;
+	public static int armSoftLimitMax = 50000;
+	public static int armSoftLimitMin = 0;
 
 	// claw rotate PID constants
 	public static double clawRotateP = 0.3;
 	public static double clawRotateI = 0.0;
 	public static double clawRotateD = 0.0;
 	public static int clawRotateIZone = 0;
+	public static int clawRotateSoftLimitMax = 4000;
+	public static int clawRotateSoftLimitMin = 0;
 
 	// maximum change in motor voltage/second (limits acceleration)
 	public static double talonRampRate = 30.0;// affects all motors
@@ -66,8 +70,8 @@ public class Globals {
 	public static double calibrationSpeed = 0.2; // from 0.0 to 1.0
 
 	// constants
+	public static final double ticksPerFoot = 1273.239544;
 	public static final double dpx = 60.0 / 640.0; // degrees per camera pixel
-	public static final double ticksToFeet = 0.0; // encoder ticks in a foot
 	public static final double camWidth = 640.0; // camera width in pixels
 	public static final double camHeight = 480.0; // camera height in pixels
 }

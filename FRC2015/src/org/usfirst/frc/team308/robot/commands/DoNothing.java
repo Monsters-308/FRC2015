@@ -4,34 +4,28 @@ import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class PreCalibrateClaw extends Command {
-
-	public PreCalibrateClaw() {
-		requires(Robot.claw);
-	}
+public class DoNothing extends Command {
 
 	@Override
 	protected void initialize() {
-		Robot.claw.preCalibration();
 	}
 
 	@Override
 	protected void execute() {
+		Robot.drivetrain.putDashboard();
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return !Robot.claw.limitSwitch();
+		return false;
 	}
 
 	@Override
 	protected void end() {
-		
 	}
 
 	@Override
 	protected void interrupted() {
-		end();
 	}
 
 }

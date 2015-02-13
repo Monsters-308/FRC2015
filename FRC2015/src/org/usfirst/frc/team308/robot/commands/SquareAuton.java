@@ -8,7 +8,7 @@ public class SquareAuton extends CommandGroup {
 
 	public SquareAuton() {
 		requires(Robot.arm);
-		// addSequential(new Drive(5.0));
+		addSequential(new Drive(-1500.0, true));
 		// addSequential(new Rotate(90.0));
 		// addSequential(new Drive(5.0));
 		// addSequential(new Rotate(90.0));
