@@ -98,7 +98,7 @@ public class RobotMap {
 		sweeperTalon.setSafetyEnabled(false);
 		sweeperTalon2.setSafetyEnabled(false);
 
-		distanceSensor = new Ultrasonic(0, 1, Unit.kInches);
+		distanceSensor = new Ultrasonic(2, 3, Unit.kInches);
 
 		compressor = new Compressor(0);
 		drawerSlides = new DoubleSolenoid(0, 1);

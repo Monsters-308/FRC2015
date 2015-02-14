@@ -24,7 +24,7 @@ public class MoveArm extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return true;
+		return Robot.arm.onTarget();
 	}
 
 	@Override

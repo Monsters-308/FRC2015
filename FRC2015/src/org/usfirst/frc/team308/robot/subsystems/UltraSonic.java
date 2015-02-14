@@ -12,6 +12,7 @@ public class UltraSonic extends Subsystem {
 
 	public UltraSonic() {
 		sensor.setEnabled(true);
+		sensor.setAutomaticMode(true);
 	}
 
 	@Override
