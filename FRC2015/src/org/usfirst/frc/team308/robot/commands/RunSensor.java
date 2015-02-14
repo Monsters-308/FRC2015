@@ -17,7 +17,6 @@ public class RunSensor extends Command {
 
 	@Override
 	protected void execute() {
-		SmartDashboard.putNumber("Time", System.currentTimeMillis());
 		SmartDashboard.putNumber("Sonic Distance",
 				Robot.ultrasonic.getDistance());
 	}

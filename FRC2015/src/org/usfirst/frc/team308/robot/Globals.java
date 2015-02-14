@@ -38,9 +38,9 @@ public class Globals {
 	public static int liftIZone = 0;
 	public static int lifttolerance = 0; // not important
 	public static int liftspeedtolerance = 0; // not important
-	public static double liftSpeed = 250.0;
+	public static double liftSpeed = 500.0;
 	public static int armSoftLimitMax = 50000;
-	public static int armSoftLimitMin = 0;
+	public static int armSoftLimitMin = -50000;
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
 
@@ -49,8 +49,8 @@ public class Globals {
 	public static double clawRotateI = 0.0;
 	public static double clawRotateD = 0.0;
 	public static int clawRotateIZone = 0;
-	public static int clawRotateSoftLimitMax = 4000;
-	public static int clawRotateSoftLimitMin = 0;
+	public static int clawRotateSoftLimitMax = 40000;
+	public static int clawRotateSoftLimitMin = -40000;
 
 	// maximum change in motor voltage/second (limits acceleration)
 	public static double talonRampRate = 30.0;// affects all motors
@@ -70,7 +70,7 @@ public class Globals {
 	public static double sweeperMaxPercentage = 0.5;
 
 	// calibration
-	public static double calibrationSpeed = 0.2; // from 0.0 to 1.0
+	public static double calibrationSpeed = -0.2; // from 0.0 to 1.0
 
 	// constants
 	public static final double ticksPerInch = 106.103295;

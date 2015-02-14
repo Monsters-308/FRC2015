@@ -17,7 +17,7 @@ public class ArmManager extends Command {
 
 	@Override
 	protected void execute() {
-		Robot.arm.addHeight(Globals.liftSpeed * Robot.oi.codriver.getZ());
+		Robot.arm.addHeight(Globals.liftSpeed * -Robot.oi.codriver.getZ());
 		Robot.arm.putValues();
 	}
 

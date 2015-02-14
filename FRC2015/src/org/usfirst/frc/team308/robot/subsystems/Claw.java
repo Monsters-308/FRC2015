@@ -35,6 +35,7 @@ public class Claw extends Subsystem {
 		clawRotate.setPID(Globals.clawRotateP, Globals.clawRotateI,
 				Globals.clawRotateD, 0.0, Globals.clawRotateIZone,
 				Globals.talonRampRate, 0);
+		clawRotate.reverseSensor(true);
 		claw.reverseSensor(true);
 
 		sweeper.enableControl();

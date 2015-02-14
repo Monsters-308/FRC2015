@@ -23,9 +23,10 @@ public class Arm extends Subsystem {
 
 		liftL.set(9); // follow armLiftTalonR
 		// TODO tune lift PID
+		liftL.reverseOutput(true);
+		liftR.reverseSensor(true);
 		liftR.setPID(Globals.liftP, Globals.liftI, Globals.liftD, 0.0,
 				Globals.liftIZone, Globals.talonRampRate, 0);
-		liftR.reverseOutput(true);
 		liftR.enableControl();
 		liftL.enableControl();
 		liftR.ClearIaccum();
@@ -91,6 +92,6 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean limitSwitch() {
-		return liftR.isRevLimitSwitchClosed();
+		return liftR.isFwdLimitSwitchClosed();
 	}
 }

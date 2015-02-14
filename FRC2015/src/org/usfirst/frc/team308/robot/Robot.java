@@ -101,6 +101,8 @@ public class Robot extends IterativeRobot {
 		// schedule the autonomous command (example)
 		Robot.drivetrain.disablePID();
 		Robot.drivetrain.enablePID();
+		Robot.arm.reset();
+		Robot.claw.reset();
 		autonomousCommand = (Command) autoChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
@@ -121,6 +123,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		Robot.drivetrain.disablePID();
 		Robot.drivetrain.enablePID();
+		Robot.arm.reset();// TODO
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
