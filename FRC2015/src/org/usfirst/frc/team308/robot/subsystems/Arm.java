@@ -28,6 +28,7 @@ public class Arm extends Subsystem {
 		liftR.reverseOutput(true);
 		liftR.enableControl();
 		liftL.enableControl();
+		liftR.ClearIaccum();
 	}
 
 	@Override

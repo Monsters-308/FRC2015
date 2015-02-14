@@ -6,6 +6,10 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DoNothing extends Command {
 
+	public DoNothing(double seconds) {
+		setTimeout(seconds);
+	}
+
 	@Override
 	protected void initialize() {
 	}
@@ -17,7 +21,7 @@ public class DoNothing extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return isTimedOut();
 	}
 
 	@Override
@@ -26,6 +30,7 @@ public class DoNothing extends Command {
 
 	@Override
 	protected void interrupted() {
+		end();
 	}
 
 }

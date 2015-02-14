@@ -17,7 +17,6 @@ public class OpenClaw extends Command {
 
 	@Override
 	protected void execute() {
-
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class OpenClaw extends Command {
 
 	@Override
 	protected void end() {
-		Globals.clawOpen = true;
+		Robot.claw.openClaw();
 	}
 
 	@Override

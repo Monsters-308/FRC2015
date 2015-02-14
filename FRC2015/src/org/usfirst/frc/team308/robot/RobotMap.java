@@ -52,6 +52,7 @@ public class RobotMap {
 	public static Compressor compressor;
 	public static DoubleSolenoid drawerSlides;
 	public static DoubleSolenoid clawTilt;
+
 	// pneumatics drawerslides 0
 	// pneumatics claw tilt 1
 

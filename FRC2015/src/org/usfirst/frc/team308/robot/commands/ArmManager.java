@@ -13,7 +13,6 @@ public class ArmManager extends Command {
 
 	@Override
 	protected void initialize() {
-		Robot.arm.reset();
 	}
 
 	@Override

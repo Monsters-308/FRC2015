@@ -11,6 +11,14 @@ public class Drive extends Command {
 	double dist = 0.0;
 	boolean strafe = false;
 
+	/**
+	 * Drive a specified distance
+	 * 
+	 * @param distance
+	 *            The distance in inches
+	 * @param straffe
+	 *            true to straffe, false to drive straight
+	 */
 	public Drive(double distance, boolean straffe) {
 		requires(Robot.drivetrain);
 		dist = distance;

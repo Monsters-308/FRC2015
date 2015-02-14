@@ -103,7 +103,7 @@ public class Vision extends Subsystem {
 		try {
 			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 			binaryFrame = NIVision.imaqCreateImage(ImageType.IMAGE_U8, 0);
-			camera = new AxisCamera("10.3.8.22");
+			camera = new AxisCamera("10.3.8.20");
 			criteria[0] = new NIVision.ParticleFilterCriteria2(
 					NIVision.MeasurementType.MT_AREA_BY_IMAGE_AREA,
 					AREA_MINIMUM, 100.0, 0, 0);

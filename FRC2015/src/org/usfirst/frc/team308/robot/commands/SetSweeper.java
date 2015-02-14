@@ -1,14 +1,16 @@
 package org.usfirst.frc.team308.robot.commands;
 
-import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class CloseClaw extends Command {
+public class SetSweeper extends Command {
 
-	public CloseClaw() {
+	double setting;
+
+	public SetSweeper(double percentage) {
 		requires(Robot.claw);
+		setting = percentage;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class CloseClaw extends Command {
 
 	@Override
 	protected void end() {
-		Robot.claw.closeClaw();
+		Robot.claw.setSweeper(setting);
 	}
 
 	@Override

@@ -4,18 +4,18 @@ import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class LiftArm extends Command {
+public class MoveArm extends Command {
 
-	double height = 0.0;
+	double position;
 
-	public LiftArm(double setpoint) {
+	public MoveArm(double pos) {
 		requires(Robot.arm);
-		height = setpoint;
+		position = pos;
 	}
 
 	@Override
 	protected void initialize() {
-		Robot.arm.setHeight(height);
+		Robot.arm.setHeight(position);
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class LiftArm extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.arm.onTarget();
+		return true;
 	}
 
 	@Override

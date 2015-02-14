@@ -68,7 +68,7 @@ public class Robot extends IterativeRobot {
 		// constructed yet. Thus, their requires() statements may grab null
 		// pointers. Bad news. Don't move it.
 		oi = new OI();
-		
+
 		autoChooser = new SendableChooser();
 
 		autoChooser.addDefault("Square Auton", new SquareAuton());
@@ -99,6 +99,8 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		// schedule the autonomous command (example)
+		Robot.drivetrain.disablePID();
+		Robot.drivetrain.enablePID();
 		autonomousCommand = (Command) autoChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
@@ -117,6 +119,8 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		Robot.drivetrain.disablePID();
+		Robot.drivetrain.enablePID();
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}

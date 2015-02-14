@@ -17,7 +17,9 @@ public class RunSensor extends Command {
 
 	@Override
 	protected void execute() {
-		SmartDashboard.putNumber("Sonic Distance", Robot.ultrasonic.getDistance());
+		Robot.ultrasonic.ping();
+		SmartDashboard.putNumber("Sonic Distance",
+				Robot.ultrasonic.getDistance());
 	}
 
 	@Override

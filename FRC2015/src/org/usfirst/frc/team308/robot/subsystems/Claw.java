@@ -58,27 +58,26 @@ public class Claw extends Subsystem {
 		SmartDashboard.putNumber("Claw Position", clawRotate.getPosition());
 		SmartDashboard.putNumber("Claw Grab Current",
 				new PowerDistributionPanel().getCurrent(15));
+		SmartDashboard.putNumber("Claw Grab Voltage", claw.getSetpoint()
+				* new PowerDistributionPanel().getVoltage());
 		SmartDashboard
 				.putBoolean("limit1", clawRotate.isFwdLimitSwitchClosed());
 		SmartDashboard
 				.putBoolean("limit2", clawRotate.isRevLimitSwitchClosed());
 		SmartDashboard.putNumber("Claw grab posistion", claw.getPosition());
-		addRotate(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
-		if (!Robot.oi.codriver.getRawButton(1)
-				|| (DriverStation.getInstance().isAutonomous() && Globals.clawOpen)) {
-			if (claw.getPosition() >= Globals.clawOpenThreshold) {
-				claw.set(-Globals.clawOpenPower);
-			} else {
-				claw.set(0);
-			}
+		if (Globals.clawOpen) {
+			claw.set(claw.getSetpoint()
+					+ Globals.currentP
+					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawOpenCurrent));
 		} else {
-			if (claw.getPosition() <= Globals.clawClosedThreshold) {
-				claw.set(Globals.clawClosePower);
-			} else {
-				claw.set(0);
-			}
+			claw.set(claw.getSetpoint()
+					- Globals.currentP
+					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawCloseCurrent));
 		}
-		sweeper.set(Globals.sweeperMaxPercentage * Robot.oi.codriver.getY());
+		addRotate(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
+		if (!DriverStation.getInstance().isAutonomous()) {
+			sweeper.set(Globals.sweeperMaxPercentage * Robot.oi.codriver.getY());
+		}
 	}
 
 	public void addRotate(double pos) {
@@ -128,6 +127,24 @@ public class Claw extends Subsystem {
 
 	public boolean limitSwitch() {
 		return clawRotate.isRevLimitSwitchClosed();
+	}
+
+	public void openClaw() {
+		resetclaw();
+		Globals.clawOpen = true;
+	}
+
+	public void closeClaw() {
+		resetclaw();
+		Globals.clawOpen = false;
+	}
+
+	public void setSweeper(double setting) {
+		sweeper.set(setting);
+	}
+
+	public void resetclaw() {
+		claw.set(0);
 	}
 
 }

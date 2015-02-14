@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends PIDSubsystem {
 
 	Gyro gyro = RobotMap.drivetrainGyro;
-	Gyro gyro2 = RobotMap.drivetrainGyro2;
+	// Gyro gyro2 = RobotMap.drivetrainGyro2;
 	CANTalon talonRF = RobotMap.drivetrainTalonRF;
 	CANTalon talonRF2 = RobotMap.drivetrainTalonRF2;
 	CANTalon talonLF = RobotMap.drivetrainTalonLF;
@@ -147,7 +147,7 @@ public class Drivetrain extends PIDSubsystem {
 		x = deadzone(x, 0.1, 1.0);
 		y = deadzone(y, 0.1, 1.0);
 		rotation = deadzone(rotation, 0.1, 1.0);
-		if (rotation != 0.0) {
+		if (rotation != 0.0 || Globals.testMode) {
 			disablePID();
 			mecanumDrive(x, y, rotation);
 		} else if (!getPIDController().isEnable()) {
@@ -244,15 +244,15 @@ public class Drivetrain extends PIDSubsystem {
 		talonRB.setPosition(0);
 		talonLB.setPosition(0);
 		if (strafe) {
-			talonRF.set(distance);
-			talonLF.set(distance);
-			talonRB.set(-distance);
-			talonLB.set(-distance);
+			talonRF.set(distance * Globals.ticksPerInch);
+			talonLF.set(distance * Globals.ticksPerInch);
+			talonRB.set(-distance * Globals.ticksPerInch);
+			talonLB.set(-distance * Globals.ticksPerInch);
 		} else {
-			talonRF.set(-distance);
-			talonLF.set(distance);
-			talonRB.set(-distance);
-			talonLB.set(distance);
+			talonRF.set(-distance * Globals.ticksPerInch);
+			talonLF.set(distance * Globals.ticksPerInch);
+			talonRB.set(-distance * Globals.ticksPerInch);
+			talonLB.set(distance * Globals.ticksPerInch);
 		}
 	}
 
@@ -301,7 +301,7 @@ public class Drivetrain extends PIDSubsystem {
 		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
 		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
 		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
-		SmartDashboard.putNumber("gyrorate", gyro2.getRate());
+		SmartDashboard.putNumber("gyrorate", gyro.getRate());
 		SmartDashboard.putNumber("gyroError", getPIDController().getError());
 	}
 

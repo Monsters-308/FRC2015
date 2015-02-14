@@ -12,7 +12,6 @@ public class ClawManager extends Command {
 
 	@Override
 	protected void initialize() {
-		Robot.claw.reset();
 	}
 
 	@Override
