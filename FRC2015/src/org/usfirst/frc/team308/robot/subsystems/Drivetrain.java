@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends PIDSubsystem {
 
 	Gyro gyro = RobotMap.drivetrainGyro;
-	// Gyro gyro2 = RobotMap.drivetrainGyro2;
 	CANTalon talonRF = RobotMap.drivetrainTalonRF;
 	CANTalon talonRF2 = RobotMap.drivetrainTalonRF2;
 	CANTalon talonLF = RobotMap.drivetrainTalonLF;
@@ -195,7 +194,8 @@ public class Drivetrain extends PIDSubsystem {
 		}
 		// // END MECANUM MATH ////
 
-		if (Globals.testMode) { // keep output from -1 to 1
+		if (Globals.testMode || Globals.simpleDrive) { // keep output from -1 to
+														// 1
 			talonRF.set(-rf); // invert right front
 			talonLF.set(lf);
 			talonRB.set(-rb); // invert right back
@@ -273,7 +273,6 @@ public class Drivetrain extends PIDSubsystem {
 		talonRB2.enableControl();
 		talonLB.enableControl();
 		talonLB2.enableControl();
-		gyro.reset();
 	}
 
 	public void testmode() { // sets motors in classic mode (no pid)
@@ -301,8 +300,12 @@ public class Drivetrain extends PIDSubsystem {
 		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
 		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
 		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
-		SmartDashboard.putNumber("gyrorate", gyro.getRate());
+		SmartDashboard.putNumber("gyroangle", gyro.getAngle());
 		SmartDashboard.putNumber("gyroError", getPIDController().getError());
+	}
+
+	public void setPID() {
+		getPIDController().setPID(Globals.gyroP, Globals.gyroI, Globals.gyroD);
 	}
 
 }

@@ -3,7 +3,6 @@ package org.usfirst.frc.team308.robot.commands;
 import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.Robot;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Drive extends Command {

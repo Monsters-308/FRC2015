@@ -37,6 +37,9 @@ public class TeleopDrive extends Command {
 	protected void initialize() {
 		if (Globals.testMode) {
 			Robot.drivetrain.testmode();
+		} else if (Globals.simpleDrive) {
+			Robot.drivetrain.testmode();
+			Robot.drivetrain.enablePID();
 		} else {
 			Robot.drivetrain.normalmode();
 			Robot.drivetrain.enablePID();
@@ -45,8 +48,8 @@ public class TeleopDrive extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		Robot.drivetrain.teleop(Robot.oi.driver.getX(),
-				Robot.oi.driver.getY(), Robot.oi.driver.getZ());
+		Robot.drivetrain.teleop(Robot.oi.driver.getX(), Robot.oi.driver.getY(),
+				Robot.oi.driver.getZ());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

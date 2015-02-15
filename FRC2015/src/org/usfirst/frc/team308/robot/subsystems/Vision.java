@@ -121,10 +121,6 @@ public class Vision extends Subsystem {
 	}
 
 	public void process() {
-		// read file in from disk. For this example to run you need to copy
-		// image20.jpg from the SampleImages folder to the
-		// directory shown below using FTP or SFTP:
-		// http://wpilib.screenstepslive.com/s/4485/m/24166/l/282299-roborio-ftp
 		SmartDashboard.putBoolean("vision", Globals.trackCan);
 		camera.getImage(frame);
 		// Update threshold values from SmartDashboard. For performance

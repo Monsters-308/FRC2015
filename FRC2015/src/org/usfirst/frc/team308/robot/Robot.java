@@ -76,14 +76,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Calibrate", new ClawCalibration());
 
 		SmartDashboard.putData("Autonomous Mode", autoChooser);
-
-		if (!prefs.containsKey("gyroP")) {
-			prefs.putDouble("gyroP", 0.0);
-			prefs.putDouble("gyroI", 0.0);
-			prefs.putDouble("gyroD", 0.0);
-			prefs.save();
-		}
-		SmartDashboard.putString("version", "0.1.3");
+		SmartDashboard.putString("version", "1.5.0");
 	}
 
 	/**
@@ -99,8 +92,22 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		// schedule the autonomous command (example)
+		Globals.gyroP = prefs.getDouble("gyroP", 0.0);
+		Globals.gyroI = prefs.getDouble("gyroI", 0.0);
+		Globals.gyroD = prefs.getDouble("gyroD", 0.0);
+		Globals.clawRotateP = prefs.getDouble("clawRotateP", 0.0);
+		Globals.clawRotateI = prefs.getDouble("clawRotateI", 0.0);
+		Globals.clawRotateD = prefs.getDouble("clawRotateD", 0.0);
+		SmartDashboard.putNumber("gyroP", Globals.gyroP);
+		SmartDashboard.putNumber("gyroI", Globals.gyroI);
+		SmartDashboard.putNumber("gyroD", Globals.gyroD);
+		SmartDashboard.putNumber("clawRotateP", Globals.clawRotateP);
+		SmartDashboard.putNumber("clawRotateI", Globals.clawRotateI);
+		SmartDashboard.putNumber("clawRotateD", Globals.clawRotateD);
 		Robot.drivetrain.disablePID();
+		Robot.drivetrain.setPID();
 		Robot.drivetrain.enablePID();
+		Robot.claw.setPID();
 		Robot.arm.reset();
 		Robot.claw.reset();
 		autonomousCommand = (Command) autoChooser.getSelected();
@@ -124,6 +131,7 @@ public class Robot extends IterativeRobot {
 		Robot.drivetrain.disablePID();
 		Robot.drivetrain.enablePID();
 		Robot.arm.reset();// TODO
+		Robot.claw.reset();
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}

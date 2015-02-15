@@ -23,7 +23,6 @@ public class Claw extends Subsystem {
 	public Claw() {
 		claw.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		clawRotate.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		sweeper2.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
 		claw.changeControlMode(ControlMode.PercentVbus);
 		clawRotate.changeControlMode(ControlMode.Position);
@@ -67,16 +66,26 @@ public class Claw extends Subsystem {
 				.putBoolean("limit2", clawRotate.isRevLimitSwitchClosed());
 		SmartDashboard.putNumber("Claw grab posistion", claw.getPosition());
 		if (Globals.clawOpen) {
-			claw.set(claw.getSetpoint()
+			double volts = claw.getSetpoint()
 					+ Globals.currentP
-					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawOpenCurrent));
+					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawOpenCurrent);
+			if (volts < 0) {
+				claw.set(volts);
+			} else {
+				claw.set(0);
+			}
 		} else {
-			claw.set(claw.getSetpoint()
+			double volts = claw.getSetpoint()
 					- Globals.currentP
-					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawCloseCurrent));
+					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawCloseCurrent);
+			if (volts > 0) {
+				claw.set(volts);
+			} else {
+				claw.set(0);
+			}
 		}
-		addRotate(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
 		if (!DriverStation.getInstance().isAutonomous()) {
+			addRotate(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
 			sweeper.set(Globals.sweeperMaxPercentage * Robot.oi.codriver.getY());
 		}
 	}
@@ -146,6 +155,12 @@ public class Claw extends Subsystem {
 
 	public void resetclaw() {
 		claw.set(0);
+	}
+
+	public void setPID() {
+		clawRotate.setPID(Globals.clawRotateP, Globals.clawRotateI,
+				Globals.clawRotateD, 0.0, Globals.clawRotateIZone,
+				Globals.talonRampRate, 0);
 	}
 
 }

@@ -44,7 +44,10 @@ public class TrackTote extends Command {
 		@Override
 		public void run() {
 			while (running) {
-				Robot.vision.process();
+				try {
+					Robot.vision.process();
+				} catch (Exception e) {
+				}
 			}
 		}
 

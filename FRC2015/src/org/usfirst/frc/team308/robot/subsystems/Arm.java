@@ -24,6 +24,7 @@ public class Arm extends Subsystem {
 		liftL.set(9); // follow armLiftTalonR
 		// TODO tune lift PID
 		liftL.reverseOutput(true);
+		liftR.reverseOutput(true);
 		liftR.reverseSensor(true);
 		liftR.setPID(Globals.liftP, Globals.liftI, Globals.liftD, 0.0,
 				Globals.liftIZone, Globals.talonRampRate, 0);
@@ -53,8 +54,8 @@ public class Arm extends Subsystem {
 	public void addHeight(double height) {
 		if (liftR.getSetpoint() + height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
-		} else if (liftR.getSetpoint() + height < Globals.armSoftLimitMin) {
-			liftR.set(Globals.armSoftLimitMin);
+		} else if (liftR.getSetpoint() + height < 0) {
+			liftR.set(0);
 		} else {
 			liftR.set(liftR.getSetpoint() + height);
 		}
@@ -63,8 +64,8 @@ public class Arm extends Subsystem {
 	public void setHeight(double height) {
 		if (height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
-		} else if (height < Globals.armSoftLimitMin) {
-			liftR.set(Globals.armSoftLimitMin);
+		} else if (height < 0) {
+			liftR.set(0);
 		} else {
 			liftR.set(height);
 		}
@@ -82,13 +83,13 @@ public class Arm extends Subsystem {
 
 	public void startCalibration() {
 		liftR.changeControlMode(ControlMode.PercentVbus);
-		liftR.set(-Globals.calibrationSpeed);
+		liftR.set(Globals.calibrationSpeed);
 	}
 
 	public void stopCalibration() {
 		liftR.set(0);
 		liftR.changeControlMode(ControlMode.Position);
-		liftR.setPosition(0.0);
+		liftR.setPosition(Globals.calibrationHeight);
 	}
 
 	public boolean limitSwitch() {
