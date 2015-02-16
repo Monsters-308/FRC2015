@@ -85,7 +85,7 @@ public class Claw extends Subsystem {
 			}
 		}
 		if (!DriverStation.getInstance().isAutonomous()) {
-			addRotate(Globals.liftSpeed * Robot.oi.codriver.getThrottle());
+			addRotate(Globals.clawSpeed * Robot.oi.codriver.getThrottle());
 			sweeper.set(Globals.sweeperMaxPercentage * Robot.oi.codriver.getY());
 		}
 	}

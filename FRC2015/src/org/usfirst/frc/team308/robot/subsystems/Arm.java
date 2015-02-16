@@ -7,6 +7,7 @@ import org.usfirst.frc.team308.robot.commands.ArmManager;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -49,6 +50,8 @@ public class Arm extends Subsystem {
 		SmartDashboard.putNumber("Arm Error", liftR.getClosedLoopError());
 		SmartDashboard.putNumber("Arm setpoint", liftR.getSetpoint());
 		SmartDashboard.putNumber("Arm Position", liftR.getPosition());
+		SmartDashboard.putNumber("Arm Voltage", liftR.getOutputVoltage()
+				/ new PowerDistributionPanel().getVoltage());
 	}
 
 	public void addHeight(double height) {
@@ -94,5 +97,9 @@ public class Arm extends Subsystem {
 
 	public boolean limitSwitch() {
 		return liftR.isFwdLimitSwitchClosed();
+	}
+
+	public double getArmHeight() {
+		return liftR.getPosition();
 	}
 }

@@ -6,12 +6,13 @@ public class SquareAuton extends CommandGroup {
 
 	public SquareAuton() {
 		addSequential(new RotateClaw(1313));
+		// addSequential(new Drive(60.0, false));
 		// addSequential(new Rotate(90.0));
-		// addSequential(new Drive(5.0));
+		// addSequential(new Drive(60.0, false));
 		// addSequential(new Rotate(90.0));
-		// addSequential(new Drive(5.0));
+		// addSequential(new Drive(60.0, false));
 		// addSequential(new Rotate(90.0));
-		// addSequential(new Drive(5.0));
+		//addSequential(new Drive(60.0, false));
 		// addSequential(new Rotate(90.0));
 	}
 

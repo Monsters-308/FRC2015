@@ -1,5 +1,7 @@
 package org.usfirst.frc.team308.robot.subsystems;
 
+import org.usfirst.frc.team308.robot.Globals;
+import org.usfirst.frc.team308.robot.Robot;
 import org.usfirst.frc.team308.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -23,7 +25,7 @@ public class Pneumatics extends Subsystem {
 	public void toggleDrawerSlides() {
 		if (drawerSlides.get() == Value.kForward) {
 			drawerSlides.set(Value.kReverse);
-		} else {
+		} else if (Robot.arm.getArmHeight() > Globals.drawerSlideHeightMinimum) { // TODO
 			drawerSlides.set(Value.kForward);
 		}
 	}
@@ -37,7 +39,10 @@ public class Pneumatics extends Subsystem {
 	}
 
 	public void setDrawerSlides(Value value) {
-		drawerSlides.set(value);
+		if (value == Value.kReverse
+				|| (Robot.arm.getArmHeight() > Globals.drawerSlideHeightMinimum)) {
+			drawerSlides.set(value);
+		}
 	}
 
 	public void setClawTilt(Value value) {

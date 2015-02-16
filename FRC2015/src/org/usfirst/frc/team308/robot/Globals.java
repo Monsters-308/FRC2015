@@ -8,7 +8,7 @@ public class Globals {
 	public static double gyroPIDOutput = 0.0;
 
 	// gyro PID constants
-	public static double gyroP = 0.006;
+	public static double gyroP = 0.01;
 	public static double gyroI = 0.0;
 	public static double gyroD = 0.0;
 
@@ -40,18 +40,20 @@ public class Globals {
 	public static int lifttolerance = 0; // not important
 	public static int liftspeedtolerance = 0; // not important
 	public static double liftSpeed = 500.0;
-	public static int armSoftLimitMax = 83000;
+	public static int armSoftLimitMax = 84000;
 	public static int calibrationHeight = -1000;
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
+	public static double drawerSlideHeightMinimum = 0.0;
 
 	// claw rotate PID constants
-	public static double clawRotateP = 0.3;
-	public static double clawRotateI = 0.0002;
+	public static double clawRotateP = 2.5;
+	public static double clawRotateI = 0.01;
 	public static double clawRotateD = 0.0;
-	public static int clawRotateIZone = 0;
+	public static int clawRotateIZone = 200;
 	public static int clawRotateSoftLimitMax = 1313;
 	public static int clawRotateSoftLimitMin = -1313;
+	public static int clawSpeed = 150;
 
 	// maximum change in motor voltage/second (limits acceleration)
 	public static double talonRampRate = 30.0;// affects all motors

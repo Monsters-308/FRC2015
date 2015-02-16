@@ -73,7 +73,7 @@ public class Robot extends IterativeRobot {
 
 		autoChooser.addDefault("Square Auton", new SquareAuton());
 		autoChooser.addObject("Vision Seeker", new Seek());
-		autoChooser.addObject("Calibrate", new ClawCalibration());
+		autoChooser.addObject("Nothing", new DoNothing(1));
 
 		SmartDashboard.putData("Autonomous Mode", autoChooser);
 		SmartDashboard.putString("version", "1.5.0");
