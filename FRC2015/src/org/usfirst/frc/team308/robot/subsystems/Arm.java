@@ -1,6 +1,7 @@
 package org.usfirst.frc.team308.robot.subsystems;
 
 import org.usfirst.frc.team308.robot.Globals;
+import org.usfirst.frc.team308.robot.Robot;
 import org.usfirst.frc.team308.robot.RobotMap;
 import org.usfirst.frc.team308.robot.commands.ArmManager;
 
@@ -55,6 +56,14 @@ public class Arm extends Subsystem {
 	}
 
 	public void addHeight(double height) {
+		if (liftR.getSetpoint() >= Globals.armMinRotationHeight
+				&& liftR.getSetpoint() + height < Globals.armMinRotationHeight) {
+			if (Robot.claw.getRotateSetpoint() != 0
+					&& Robot.claw.getRotateSetpoint() != Globals.clawRotateSoftLimitMax) {
+				liftR.set(Globals.armMinRotationHeight);
+				return;
+			}
+		}
 		if (liftR.getSetpoint() + height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
 		} else if (liftR.getSetpoint() + height < 0) {
@@ -65,6 +74,14 @@ public class Arm extends Subsystem {
 	}
 
 	public void setHeight(double height) {
+		if (liftR.getSetpoint() >= Globals.armMinRotationHeight
+				&& height < Globals.armMinRotationHeight) {
+			if (Robot.claw.getRotateSetpoint() != 0
+					&& Robot.claw.getRotateSetpoint() != Globals.clawRotateSoftLimitMax) {
+				liftR.set(Globals.armMinRotationHeight);
+				return;
+			}
+		}
 		if (height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
 		} else if (height < 0) {

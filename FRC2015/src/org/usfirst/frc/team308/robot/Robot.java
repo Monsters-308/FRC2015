@@ -128,9 +128,23 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		Globals.gyroP = prefs.getDouble("gyroP", 0.0);
+		Globals.gyroI = prefs.getDouble("gyroI", 0.0);
+		Globals.gyroD = prefs.getDouble("gyroD", 0.0);
+		Globals.clawRotateP = prefs.getDouble("clawRotateP", 0.0);
+		Globals.clawRotateI = prefs.getDouble("clawRotateI", 0.0);
+		Globals.clawRotateD = prefs.getDouble("clawRotateD", 0.0);
+		SmartDashboard.putNumber("gyroP", Globals.gyroP);
+		SmartDashboard.putNumber("gyroI", Globals.gyroI);
+		SmartDashboard.putNumber("gyroD", Globals.gyroD);
+		SmartDashboard.putNumber("clawRotateP", Globals.clawRotateP);
+		SmartDashboard.putNumber("clawRotateI", Globals.clawRotateI);
+		SmartDashboard.putNumber("clawRotateD", Globals.clawRotateD);
 		Robot.drivetrain.disablePID();
+		Robot.drivetrain.setPID();
 		Robot.drivetrain.enablePID();
-		Robot.arm.reset();// TODO
+		Robot.claw.setPID();
+		Robot.arm.reset();
 		Robot.claw.reset();
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();

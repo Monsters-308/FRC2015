@@ -2,15 +2,17 @@ package org.usfirst.frc.team308.robot;
 
 public class Globals {
 
-	public static boolean testMode = true;
-	public static boolean simpleDrive = false;
+	public static boolean testMode = false;
+	public static boolean simpleDrive = true;
 
 	public static double gyroPIDOutput = 0.0;
 
 	// gyro PID constants
-	public static double gyroP = 0.01;
+	public static double gyroP = 0.012;
 	public static double gyroI = 0.0;
-	public static double gyroD = 0.0;
+	public static double gyroD = 0.07;
+	public static double gyroIZone = 10;
+	public static double gyroIAccumulation = 0; // do not change
 
 	public static double angletolerance = 1.0;
 	public static double gyroratetolerance = 3.0; // in degrees/sec
@@ -39,21 +41,24 @@ public class Globals {
 	public static int liftIZone = 0;
 	public static int lifttolerance = 0; // not important
 	public static int liftspeedtolerance = 0; // not important
-	public static double liftSpeed = 500.0;
-	public static int armSoftLimitMax = 84000;
+	public static double liftSpeed = 800.0;
 	public static int calibrationHeight = -1000;
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
 	public static double drawerSlideHeightMinimum = 0.0;
+	
+	public static int armSoftLimitMax = 85600;
+	public static int armMinRotationHeight = 20000;
 
 	// claw rotate PID constants
 	public static double clawRotateP = 2.5;
 	public static double clawRotateI = 0.01;
 	public static double clawRotateD = 0.0;
-	public static int clawRotateIZone = 200;
-	public static int clawRotateSoftLimitMax = 1313;
-	public static int clawRotateSoftLimitMin = -1313;
+	public static int clawRotateIZone = 300;
+	public static int clawRotateSoftLimitMax = 2600;
+	public static int clawRotateSoftLimitMin = -130;
 	public static int clawSpeed = 150;
+	public static int adjustCount = 20;
 
 	// maximum change in motor voltage/second (limits acceleration)
 	public static double talonRampRate = 30.0;// affects all motors
@@ -71,6 +76,7 @@ public class Globals {
 	public static double clawCloseCurrent = 2.0;
 	public static double currentP = 0.02;
 	public static double sweeperMaxPercentage = 0.5;
+	public static double clawTimeout = 4000; // in milliseconds
 
 	// calibration
 	public static double calibrationSpeed = 0.2; // from 0.0 to 1.0

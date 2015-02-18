@@ -20,6 +20,8 @@ public class Claw extends Subsystem {
 	CANTalon claw = RobotMap.clawTalon;
 	CANTalon clawRotate = RobotMap.clawRotateTalon;
 
+	double clawTimeout = 0;
+
 	public Claw() {
 		claw.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		clawRotate.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -42,6 +44,7 @@ public class Claw extends Subsystem {
 		claw.enableControl();
 		clawRotate.enableControl();
 
+		resetTimer();
 		// TODO limit switches
 	}
 
@@ -69,7 +72,7 @@ public class Claw extends Subsystem {
 			double volts = claw.getSetpoint()
 					+ Globals.currentP
 					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawOpenCurrent);
-			if (volts < 0) {
+			if (volts < 0 && (System.currentTimeMillis() - clawTimeout) < 4000) {
 				claw.set(volts);
 			} else {
 				claw.set(0);
@@ -78,14 +81,16 @@ public class Claw extends Subsystem {
 			double volts = claw.getSetpoint()
 					- Globals.currentP
 					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawCloseCurrent);
-			if (volts > 0) {
+			if (volts > 0 && (System.currentTimeMillis() - clawTimeout) < 4000) {
 				claw.set(volts);
 			} else {
 				claw.set(0);
 			}
 		}
 		if (!DriverStation.getInstance().isAutonomous()) {
-			addRotate(Globals.clawSpeed * Robot.oi.codriver.getThrottle());
+			if (Robot.arm.getArmHeight() > Globals.armMinRotationHeight) {
+				addRotate(Globals.clawSpeed * Robot.oi.codriver.getThrottle());
+			}
 			sweeper.set(Globals.sweeperMaxPercentage * Robot.oi.codriver.getY());
 		}
 	}
@@ -93,8 +98,8 @@ public class Claw extends Subsystem {
 	public void addRotate(double pos) {
 		if (clawRotate.getSetpoint() + pos > Globals.clawRotateSoftLimitMax) {
 			clawRotate.set(Globals.clawRotateSoftLimitMax);
-		} else if (clawRotate.getSetpoint() + pos < Globals.clawRotateSoftLimitMin) {
-			clawRotate.set(Globals.clawRotateSoftLimitMin);
+		} else if (clawRotate.getSetpoint() + pos < 0) {
+			clawRotate.set(0);
 		} else {
 			clawRotate.set(clawRotate.getSetpoint() + pos);
 		}
@@ -103,8 +108,8 @@ public class Claw extends Subsystem {
 	public void rotateClaw(double pos) {
 		if (pos > Globals.clawRotateSoftLimitMax) {
 			clawRotate.set(Globals.clawRotateSoftLimitMax);
-		} else if (pos < Globals.clawRotateSoftLimitMin) {
-			clawRotate.set(Globals.clawRotateSoftLimitMin);
+		} else if (pos < 0) {
+			clawRotate.set(0);
 		} else {
 			clawRotate.set(pos);
 		}
@@ -132,7 +137,7 @@ public class Claw extends Subsystem {
 	public void stopCalibration() {
 		clawRotate.set(0);
 		clawRotate.changeControlMode(ControlMode.Position);
-		clawRotate.setPosition(0.0);
+		clawRotate.setPosition(Globals.clawRotateSoftLimitMin);
 	}
 
 	public boolean limitSwitch() {
@@ -154,13 +159,34 @@ public class Claw extends Subsystem {
 	}
 
 	public void resetclaw() {
+		resetTimer();
 		claw.set(0);
 	}
 
 	public void setPID() {
+		clawRotate.disableControl();
 		clawRotate.setPID(Globals.clawRotateP, Globals.clawRotateI,
 				Globals.clawRotateD, 0.0, Globals.clawRotateIZone,
 				Globals.talonRampRate, 0);
+		clawRotate.enableControl();
+	}
+
+	public void resetTimer() {
+		clawTimeout = System.currentTimeMillis();
+	}
+
+	public void adjustClaw(boolean positive) {
+		if (positive) {
+			clawRotate.setPosition(clawRotate.getPosition()
+					+ Globals.adjustCount);
+		} else {
+			clawRotate.setPosition(clawRotate.getPosition()
+					- Globals.adjustCount);
+		}
+	}
+
+	public double getRotateSetpoint() {
+		return clawRotate.getSetpoint();
 	}
 
 }
