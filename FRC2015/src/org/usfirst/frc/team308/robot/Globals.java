@@ -72,9 +72,10 @@ public class Globals {
 	public static int clawOpenThreshold = 100;
 	public static int clawClosedThreshold = 10000;
 	public static boolean clawOpen = true;
-	public static double clawOpenCurrent = 0.5;
-	public static double clawCloseCurrent = 2.0;
-	public static double currentP = 0.02;
+	public static double clawOpenVoltage = 0.2;
+	public static double clawCloseVoltage = 0.3;
+	public static double clawOpenMinVoltPercent = 0.5;
+	public static double currentP = 0.03;
 	public static double sweeperMaxPercentage = 0.5;
 	public static double clawTimeout = 4000; // in milliseconds
 

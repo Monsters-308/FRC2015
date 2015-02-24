@@ -13,6 +13,7 @@ public class RunSensor extends Command {
 
 	@Override
 	protected void initialize() {
+		Robot.ultrasonic.setup();
 	}
 
 	@Override

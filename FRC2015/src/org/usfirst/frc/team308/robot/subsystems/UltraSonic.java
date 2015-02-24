@@ -11,8 +11,7 @@ public class UltraSonic extends Subsystem {
 	Ultrasonic sensor = RobotMap.distanceSensor;
 
 	public UltraSonic() {
-		sensor.setEnabled(true);
-		sensor.setAutomaticMode(true);
+		
 	}
 
 	@Override
@@ -20,10 +19,11 @@ public class UltraSonic extends Subsystem {
 		setDefaultCommand(new RunSensor());
 	}
 
-	public void ping() {
-		sensor.ping();
+	public void setup(){
+		sensor.setEnabled(true);
+		sensor.setAutomaticMode(true);
 	}
-
+	
 	public double getDistance() {
 		return sensor.getRangeInches();
 	}

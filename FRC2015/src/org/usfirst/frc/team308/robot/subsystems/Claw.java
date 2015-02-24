@@ -22,6 +22,11 @@ public class Claw extends Subsystem {
 
 	double clawTimeout = 0;
 
+	double count = 0.0;
+	double currentsum = 0.0;
+
+	boolean stopped = false;
+
 	public Claw() {
 		claw.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		clawRotate.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -68,20 +73,33 @@ public class Claw extends Subsystem {
 		SmartDashboard
 				.putBoolean("limit2", clawRotate.isRevLimitSwitchClosed());
 		SmartDashboard.putNumber("Claw grab posistion", claw.getPosition());
+		double current = new PowerDistributionPanel().getCurrent(15);
+		if (count > 15) {
+			count = 0;
+			currentsum = 0;
+		} else {
+			currentsum += current;
+			count += 1;
+		}
 		if (Globals.clawOpen) {
-			double volts = claw.getSetpoint()
-					+ Globals.currentP
-					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawOpenCurrent);
-			if (volts < 0 && (System.currentTimeMillis() - clawTimeout) < 4000) {
-				claw.set(volts);
+			// double volts = claw.getSetpoint() + Globals.currentP
+			// * (current - Globals.clawOpenCurrent);
+			if ((currentsum / count < 2.0 && currentsum / count > 1.6 && count > 10)
+					|| stopped) {
+				claw.set(-Globals.clawOpenMinVoltPercent
+						* Globals.clawOpenVoltage);
+				stopped = true;
+			} else if (-Globals.clawOpenVoltage < 0
+					&& (System.currentTimeMillis() - clawTimeout) < 10000) {
+				claw.set(-Globals.clawOpenVoltage);
 			} else {
 				claw.set(0);
 			}
 		} else {
-			double volts = claw.getSetpoint()
-					- Globals.currentP
-					* (new PowerDistributionPanel().getCurrent(15) - Globals.clawCloseCurrent);
-			if (volts > 0 && (System.currentTimeMillis() - clawTimeout) < 4000) {
+			// double volts = claw.getSetpoint() - Globals.currentP
+			// * (current - Globals.clawCloseCurrent);
+			double volts = Globals.clawCloseVoltage;
+			if (volts > 0 && (System.currentTimeMillis() - clawTimeout) < 10000) {
 				claw.set(volts);
 			} else {
 				claw.set(0);
@@ -160,6 +178,7 @@ public class Claw extends Subsystem {
 
 	public void resetclaw() {
 		resetTimer();
+		stopped = false;
 		claw.set(0);
 	}
 
