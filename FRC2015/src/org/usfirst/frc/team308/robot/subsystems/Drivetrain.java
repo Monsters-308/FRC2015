@@ -167,7 +167,7 @@ public class Drivetrain extends PIDSubsystem {
 			gyro.reset();
 			Globals.gyroIAccumulation = 0;
 			getPIDController().enable();
-			setSetpoint(gyro.getRate() * Globals.gyrocorrection);
+			setSetpoint(gyro.getRate() * gyro.getRate() * Globals.gyrocorrection);
 			mecanumDrive(x, y, Globals.gyroPIDOutput);
 		} else {
 			mecanumDrive(x, y, Globals.gyroPIDOutput);

@@ -2,6 +2,9 @@ package org.usfirst.frc.team308.robot;
 
 public class Globals {
 
+	//set to 1 for competition bot
+	public static final double armLiftPracticeBotMultiplier = 16.0/9.0;
+	
 	public static boolean testMode = false;
 	public static boolean simpleDrive = true;
 
@@ -41,14 +44,15 @@ public class Globals {
 	public static int liftIZone = 0;
 	public static int lifttolerance = 0; // not important
 	public static int liftspeedtolerance = 0; // not important
-	public static double liftSpeed = 800.0;
-	public static int calibrationHeight = -1000;
+	public static double liftSpeed = 800.0*Globals.armLiftPracticeBotMultiplier;
+	public static int calibrationHeight = (int)(-1000*Globals.armLiftPracticeBotMultiplier);
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
 	public static double drawerSlideHeightMinimum = 0.0;
 	
-	public static int armSoftLimitMax = 85600;
-	public static int armMinRotationHeight = 20000;
+	public static int armSoftLimitMax = (int)(85600*Globals.armLiftPracticeBotMultiplier);
+	public static int armSoftLimitMin = (int)(2000*Globals.armLiftPracticeBotMultiplier);
+	public static int armMinRotationHeight = 0;
 
 	// claw rotate PID constants
 	public static double clawRotateP = 2.5;

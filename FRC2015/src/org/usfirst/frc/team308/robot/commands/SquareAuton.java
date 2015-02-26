@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class SquareAuton extends CommandGroup {
 
 	public SquareAuton() {
-		// addSequential(new Rotate(180));
-		addSequential(new RotateClaw(1313));
+		addSequential(new Rotate(180));
+		//addSequential(new RotateClaw(1313));
 		// addSequential(new Drive(60.0, false));
 		// addSequential(new Rotate(90.0));
 		// addSequential(new Drive(60.0, false));

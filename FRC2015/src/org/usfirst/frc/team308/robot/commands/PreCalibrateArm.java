@@ -21,7 +21,7 @@ public class PreCalibrateArm extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return !Robot.arm.limitSwitch();
+		return Robot.arm.limitSwitch();
 	}
 
 	@Override

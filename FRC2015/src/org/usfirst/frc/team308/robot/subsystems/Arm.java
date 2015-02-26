@@ -66,8 +66,8 @@ public class Arm extends Subsystem {
 		}
 		if (liftR.getSetpoint() + height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
-		} else if (liftR.getSetpoint() + height < 0) {
-			liftR.set(0);
+		} else if (liftR.getSetpoint() + height < Globals.armSoftLimitMin) {
+			liftR.set(Globals.armSoftLimitMin);
 		} else {
 			liftR.set(liftR.getSetpoint() + height);
 		}
@@ -84,8 +84,8 @@ public class Arm extends Subsystem {
 		}
 		if (height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
-		} else if (height < 0) {
-			liftR.set(0);
+		} else if (height < Globals.armSoftLimitMin) {
+			liftR.set(Globals.armSoftLimitMin);
 		} else {
 			liftR.set(height);
 		}
@@ -98,7 +98,7 @@ public class Arm extends Subsystem {
 
 	public void preCalibration() {
 		liftR.changeControlMode(ControlMode.PercentVbus);
-		liftR.set(Globals.calibrationSpeed);
+		liftR.set(-Globals.calibrationSpeed);
 	}
 
 	public void startCalibration() {
