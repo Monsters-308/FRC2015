@@ -12,11 +12,14 @@ package org.usfirst.frc.team308.robot.subsystems;
 
 import org.usfirst.frc.team308.robot.Globals;
 import org.usfirst.frc.team308.robot.RobotMap;
-import org.usfirst.frc.team308.robot.commands.*;
+import org.usfirst.frc.team308.robot.commands.TeleopDrive;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +41,7 @@ public class Drivetrain extends PIDSubsystem {
 
 	double lasterror = 0;
 	double error = 0;
+	Timer t = new Timer();
 
 	// Initialize your subsystem here
 	public Drivetrain() {
@@ -106,14 +110,17 @@ public class Drivetrain extends PIDSubsystem {
 		// Return your input value for the PID loop
 		// e.g. a sensor, like a potentiometer:
 		// yourPot.getAverageVoltage() / kYourMaxVoltage;
-		error = getPIDController().getSetpoint() - gyro.getAngle();
-		if (Math.abs(error) < Globals.gyroIZone && error * lasterror >= 0) {
+		error = getPIDController().getSetpoint() - getGyroAngle();
+		error*=4;
+		if (Math.abs(error) < Globals.gyroIZone
+				&& Math.abs(error) > Globals.angletolerance
+				&& error * lasterror >= 0) {
 			Globals.gyroIAccumulation += error;
 		} else {
 			Globals.gyroIAccumulation = 0;
 		}
 		lasterror = error;
-		return gyro.getAngle();
+		return getGyroAngle();
 	}
 
 	protected void usePIDOutput(double output) {
@@ -149,6 +156,9 @@ public class Drivetrain extends PIDSubsystem {
 
 	public void enablePID() {
 		if (!getPIDController().isEnable()) {
+			t.stop();
+			t.reset();
+			t.start();
 			gyro.reset();
 			Globals.gyroIAccumulation = 0;
 			getPIDController().enable();
@@ -159,22 +169,43 @@ public class Drivetrain extends PIDSubsystem {
 	public void teleop(double x, double y, double rotation) {
 		x = deadzone(x, 0.1, 1.0);
 		y = deadzone(y, 0.1, 1.0);
+		rotation = rotation * 0.5;
 		rotation = deadzone(rotation, 0.2, 1.0);
 		if (rotation != 0.0 || Globals.testMode) {
 			disablePID();
 			mecanumDrive(x, y, rotation);
 		} else if (!getPIDController().isEnable()) {
 			gyro.reset();
+			t.reset();
+			t.start();
 			Globals.gyroIAccumulation = 0;
 			getPIDController().enable();
-			setSetpoint(gyro.getRate() * gyro.getRate() * Globals.gyrocorrection);
+			if (gyro.getRate() < 0) {
+				setSetpoint(-gyro.getRate() * gyro.getRate()
+						* Globals.gyrocorrection);
+			} else {
+				setSetpoint(gyro.getRate() * gyro.getRate()
+						* Globals.gyrocorrection);
+			}
 			mecanumDrive(x, y, Globals.gyroPIDOutput);
 		} else {
+			if (x == 0 && y == 0 && rotation == 0
+					&& Math.abs(gyro.getRate()) < Globals.gyroratetolerance) {
+				gyro.reset();
+				t.reset();
+				t.start();
+				Globals.gyroIAccumulation = 0;
+				setSetpoint(0);
+			}
 			mecanumDrive(x, y, Globals.gyroPIDOutput);
 		}
 	}
 
 	public void mecanumDrive(double x, double y, double rotation) {
+		mecanumDrive(x, y, rotation, false);
+	}
+
+	public void mecanumDrive(double x, double y, double rotation, boolean simple) {
 		putDashboard();
 		double lf;// is what will be set to the left front wheel speed
 		double rf;// is what will be set to the right front wheel speed
@@ -209,8 +240,7 @@ public class Drivetrain extends PIDSubsystem {
 		}
 		// // END MECANUM MATH ////
 
-		if (Globals.testMode || Globals.simpleDrive) { // keep output from -1 to
-														// 1
+		if (Globals.testMode || Globals.simpleDrive || simple) {
 			talonRF.set(-rf); // invert right front
 			talonLF.set(lf);
 			talonRB.set(-rb); // invert right back
@@ -241,8 +271,39 @@ public class Drivetrain extends PIDSubsystem {
 	public void rotate(double angle) {
 		enablePID();
 		gyro.reset();
+		t.reset();
+		t.start();
 		Globals.gyroIAccumulation = 0;
 		setSetpoint(angle);
+	}
+
+	public void setGyroSetPoint(double angle) {
+		setSetpoint(angle);
+	}
+
+	public void simpleDriveInit(double power, boolean strafe) {
+		disablePID();
+		enablePID();
+		talonRF.setPosition(0);
+		talonLF.setPosition(0);
+		talonRB.setPosition(0);
+		talonLB.setPosition(0);
+		talonRF.changeControlMode(ControlMode.PercentVbus);
+		talonLF.changeControlMode(ControlMode.PercentVbus);
+		talonRB.changeControlMode(ControlMode.PercentVbus);
+		talonLB.changeControlMode(ControlMode.PercentVbus);
+	}
+
+	public void simpleDrive(double power, boolean strafe) {
+		if (strafe) {
+			mecanumDrive(power, 0, Globals.gyroPIDOutput);
+		} else {
+			mecanumDrive(0, power, Globals.gyroPIDOutput);
+		}
+	}
+
+	public double getGyroAngle() {
+		return 4*(gyro.getAngle() - t.get() * Globals.gyrodrift);
 	}
 
 	public void drive(double distance, boolean strafe) {
@@ -270,6 +331,56 @@ public class Drivetrain extends PIDSubsystem {
 			talonRB.set(-distance * Globals.ticksPerInch);
 			talonLB.set(distance * Globals.ticksPerInch);
 		}
+	}
+
+	public void complexDriveInit(double distance, boolean strafe) {
+		// TODO verify signs
+		disablePID();
+		enablePID();
+		talonRF.changeControlMode(ControlMode.PercentVbus);
+		talonRB.changeControlMode(ControlMode.PercentVbus);
+		talonLB.changeControlMode(ControlMode.PercentVbus);
+		talonLF.changeControlMode(ControlMode.Position);
+		talonLF.setProfile(1);
+		talonLF.setPosition(0);
+		if (strafe) {
+			talonLF.set(distance * Globals.ticksPerInch);
+		} else {
+			talonLF.set(distance * Globals.ticksPerInch);
+		}
+	}
+
+	public boolean isComplexDriveFinished() {
+		return Math.abs(talonLF.getClosedLoopError()) < Globals.distancetolerance
+				&& Math.abs(talonLF.getSpeed()) < Globals.speedtolerance;
+	}
+
+	public void complexDrive(boolean strafe) {
+		double lfpow = talonLF.getOutputVoltage() / talonLF.getBusVoltage();
+		double magnitude = lfpow - Globals.gyroPIDOutput;
+		double rf = magnitude - Globals.gyroPIDOutput;
+		double lb = magnitude + Globals.gyroPIDOutput;
+		double rb = magnitude - Globals.gyroPIDOutput;
+		if (strafe) {
+			rf = -magnitude - Globals.gyroPIDOutput;
+			lb = -magnitude + Globals.gyroPIDOutput;
+		}
+		double largest = Math.abs(lfpow);
+		if (Math.abs(rf) > largest) {
+			largest = Math.abs(rf);
+		} else if (Math.abs(lb) > largest) {
+			largest = Math.abs(lb);
+		} else if (Math.abs(rb) > largest) {
+			largest = Math.abs(rb);
+		}
+		if (largest > 1.0) {
+			rf = rf / largest;
+			lb = lb / largest;
+			rb = rb / largest;
+		}
+		talonRF.set(-rf);
+		talonLB.set(lb);
+		talonRB.set(-rb);
 	}
 
 	public void normalmode() { // sets motors in speed mode (with pid)
@@ -316,13 +427,29 @@ public class Drivetrain extends PIDSubsystem {
 		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
 		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
 		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
-		SmartDashboard.putNumber("gyroangle", gyro.getAngle());
+		SmartDashboard.putNumber("gyroangle", 4*gyro.getAngle());
+		SmartDashboard.putNumber("gyroval", getGyroAngle());
 		SmartDashboard.putNumber("gyroError", getPIDController().getError());
 		SmartDashboard.putNumber("GyroIAcc", Globals.gyroIAccumulation);
+		SmartDashboard.putNumber("gyrocorrection", Globals.gyrocorrection);
+		SmartDashboard.putNumber("lf distance", talonLF.getPosition());
 	}
 
 	public void setPID() {
-		getPIDController().setPID(Globals.gyroP, Globals.gyroI, Globals.gyroD);
+		getPIDController().setPID(Globals.gyroP, 0, Globals.gyroD);
+		talonRF.setPID(Globals.talonP, Globals.talonI, Globals.talonD, 0,
+				Globals.iZone, Globals.talonRampRate, 1);
+		talonLF.setPID(Globals.talonP, Globals.talonI, Globals.talonD, 0,
+				Globals.iZone, Globals.talonRampRate, 1);
+		talonRB.setPID(Globals.talonP, Globals.talonI, Globals.talonD, 0,
+				Globals.iZone, Globals.talonRampRate, 1);
+		talonLB.setPID(Globals.talonP, Globals.talonI, Globals.talonD, 0,
+				Globals.iZone, Globals.talonRampRate, 1);
+
+	}
+
+	public void calibrateGyro() {
+		gyro.initGyro();
 	}
 
 }

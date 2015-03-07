@@ -11,24 +11,26 @@ public class Globals {
 	public static double gyroPIDOutput = 0.0;
 
 	// gyro PID constants
-	public static double gyroP = 0.012;
-	public static double gyroI = 0.0;
+	public static double gyroP = 0.011;
+	public static double gyroI = 0.0009;
 	public static double gyroD = 0.07;
-	public static double gyroIZone = 10;
+	public static double gyroIZone = 15;
 	public static double gyroIAccumulation = 0; // do not change
 
-	public static double angletolerance = 1.0;
+	public static double angletolerance = 15.0;
 	public static double gyroratetolerance = 3.0; // in degrees/sec
 
-	public static double gyrocorrection = 0.0;
+	public static double gyrocorrection = 1.0;
+	
+	public static double gyrodrift = 0; //per second
 
 	// motor position PID constants
 	public static double talonP = 0.1;// 0.012;
 	public static double talonI = 0.0;// 0.002;
 	public static double talonD = 0.0;
-	public static int iZone = 1200;
+	public static int iZone = 1061;
 
-	public static double distancetolerance = 100; // in ticks
+	public static double distancetolerance = 2000; // in ticks
 	public static double speedtolerance = 50.0; // encoder ticks/100
 												// milliseconds
 
@@ -42,20 +44,20 @@ public class Globals {
 	public static double liftI = 0.0;
 	public static double liftD = 0.1;
 	public static int liftIZone = 0;
-	public static int lifttolerance = 0; // not important
-	public static int liftspeedtolerance = 0; // not important
-	public static double liftSpeed = 800.0*Globals.armLiftPracticeBotMultiplier;
-	public static int calibrationHeight = (int)(-1000*Globals.armLiftPracticeBotMultiplier);
+	public static int lifttolerance = 2000; // not important
+	public static int liftspeedtolerance = 100;
+	public static double liftSpeed = 1100.0*Globals.armLiftPracticeBotMultiplier;
+	public static int calibrationHeight = (int)(-2000*Globals.armLiftPracticeBotMultiplier);
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
 	public static double drawerSlideHeightMinimum = 0.0;
 	
-	public static int armSoftLimitMax = (int)(85600*Globals.armLiftPracticeBotMultiplier);
-	public static int armSoftLimitMin = (int)(2000*Globals.armLiftPracticeBotMultiplier);
+	public static int armSoftLimitMax = (int)(73200*Globals.armLiftPracticeBotMultiplier);
 	public static int armMinRotationHeight = 0;
+	public static int armMaxDelay = 5000;
 
 	// claw rotate PID constants
-	public static double clawRotateP = 2.5;
+	public static double clawRotateP = 1;
 	public static double clawRotateI = 0.01;
 	public static double clawRotateD = 0.0;
 	public static int clawRotateIZone = 300;
@@ -76,8 +78,8 @@ public class Globals {
 	public static int clawOpenThreshold = 100;
 	public static int clawClosedThreshold = 10000;
 	public static boolean clawOpen = true;
-	public static double clawOpenVoltage = 0.2;
-	public static double clawCloseVoltage = 0.3;
+	public static double clawOpenCurrent = 0.4;
+	public static double clawCloseCurrent = 1.0;
 	public static double clawOpenMinVoltPercent = 0.5;
 	public static double currentP = 0.03;
 	public static double sweeperMaxPercentage = 0.5;
@@ -87,8 +89,8 @@ public class Globals {
 	public static double calibrationSpeed = 0.2; // from 0.0 to 1.0
 
 	// constants
-	public static final double ticksPerInch = 106.103295;
-	public static final double ticksPerFoot = 1273.239544;
+	public static final double ticksPerInch = 106.103295*5;
+	public static final double ticksPerFoot = 1273.239544*5;
 	public static final double dpx = 60.0 / 640.0; // degrees per camera pixel
 	public static final double camWidth = 640.0; // camera width in pixels
 	public static final double camHeight = 480.0; // camera height in pixels

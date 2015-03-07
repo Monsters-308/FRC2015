@@ -56,44 +56,43 @@ public class Arm extends Subsystem {
 	}
 
 	public void addHeight(double height) {
-		if (liftR.getSetpoint() >= Globals.armMinRotationHeight
+		/*if (liftR.getSetpoint() >= Globals.armMinRotationHeight
 				&& liftR.getSetpoint() + height < Globals.armMinRotationHeight) {
 			if (Robot.claw.getRotateSetpoint() != 0
 					&& Robot.claw.getRotateSetpoint() != Globals.clawRotateSoftLimitMax) {
 				liftR.set(Globals.armMinRotationHeight);
 				return;
 			}
-		}
+		}*/
 		if (liftR.getSetpoint() + height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
-		} else if (liftR.getSetpoint() + height < Globals.armSoftLimitMin) {
-			liftR.set(Globals.armSoftLimitMin);
+		} else if (liftR.getSetpoint() + height < 0) {
+			liftR.set(0);
+		} else if (Math.abs(liftR.getSetpoint() - liftR.getPosition()) > Globals.armMaxDelay
+				&& height != 0) {
+			if (liftR.getSetpoint() > liftR.getPosition() && height > 0) {
+				liftR.set(liftR.getPosition() + Globals.armMaxDelay);
+			} else if (liftR.getSetpoint() < liftR.getPosition() && height < 0){
+				liftR.set(liftR.getPosition() - Globals.armMaxDelay);
+			}
 		} else {
 			liftR.set(liftR.getSetpoint() + height);
 		}
 	}
 
 	public void setHeight(double height) {
-		if (liftR.getSetpoint() >= Globals.armMinRotationHeight
-				&& height < Globals.armMinRotationHeight) {
-			if (Robot.claw.getRotateSetpoint() != 0
-					&& Robot.claw.getRotateSetpoint() != Globals.clawRotateSoftLimitMax) {
-				liftR.set(Globals.armMinRotationHeight);
-				return;
-			}
-		}
 		if (height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
-		} else if (height < Globals.armSoftLimitMin) {
-			liftR.set(Globals.armSoftLimitMin);
+		} else if (height < 0) {
+			liftR.set(0);
 		} else {
 			liftR.set(height);
+			SmartDashboard.putNumber("Arm setpoint", height);
 		}
 	}
 
 	public boolean onTarget() {
-		return (Math.abs(liftR.getClosedLoopError()) < Globals.lifttolerance)
-				&& (Math.abs(liftR.getSpeed()) < Globals.liftspeedtolerance);
+		return (Math.abs(liftR.getSpeed()) < Globals.liftspeedtolerance);
 	}
 
 	public void preCalibration() {

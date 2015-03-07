@@ -49,7 +49,7 @@ public class TeleopDrive extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		Robot.drivetrain.teleop(-Robot.oi.driver.getX(),
-				Robot.oi.driver.getY(), Robot.oi.codriver.getX());
+				Robot.oi.driver.getY(), Robot.oi.driver.getTwist());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

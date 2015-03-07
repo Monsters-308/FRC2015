@@ -64,10 +64,9 @@ public class Claw extends Subsystem {
 		SmartDashboard.putNumber("Claw Error", clawRotate.getClosedLoopError());
 		SmartDashboard.putNumber("Claw setpoint", clawRotate.getSetpoint());
 		SmartDashboard.putNumber("Claw Position", clawRotate.getPosition());
-		SmartDashboard.putNumber("Claw Grab Current",
-				new PowerDistributionPanel().getCurrent(15));
-		SmartDashboard.putNumber("Claw Grab Voltage", claw.getSetpoint()
-				* new PowerDistributionPanel().getVoltage());
+		SmartDashboard.putNumber("Claw Grab Current", claw.getOutputCurrent());
+		SmartDashboard.putNumber("Claw Grab Voltage",
+				claw.getSetpoint() * claw.getBusVoltage());
 		SmartDashboard
 				.putBoolean("limit1", clawRotate.isFwdLimitSwitchClosed());
 		SmartDashboard
@@ -82,24 +81,23 @@ public class Claw extends Subsystem {
 			count += 1;
 		}
 		if (Globals.clawOpen) {
-			// double volts = claw.getSetpoint() + Globals.currentP
-			// * (current - Globals.clawOpenCurrent);
-			if ((currentsum / count < 2.0 && currentsum / count > 1.6 && count > 10)
-					|| stopped) {
-				claw.set(-Globals.clawOpenMinVoltPercent
-						* Globals.clawOpenVoltage);
-				stopped = true;
-			} else if (-Globals.clawOpenVoltage < 0
-					&& (System.currentTimeMillis() - clawTimeout) < 10000) {
-				claw.set(-Globals.clawOpenVoltage);
+			if (claw.getOutputCurrent() == 0) {
+				claw.set(-Globals.clawOpenCurrent);
+			}
+			double volts = claw.getSetpoint() + Globals.currentP
+					* (claw.getOutputCurrent() - Globals.clawOpenCurrent);
+			if (volts < 0) {
+				claw.set(volts);
 			} else {
 				claw.set(0);
 			}
 		} else {
-			// double volts = claw.getSetpoint() - Globals.currentP
-			// * (current - Globals.clawCloseCurrent);
-			double volts = Globals.clawCloseVoltage;
-			if (volts > 0 && (System.currentTimeMillis() - clawTimeout) < 200000) {
+			if (claw.getOutputCurrent() == 0) {
+				claw.set(Globals.clawCloseCurrent);
+			}
+			double volts = claw.getSetpoint() - Globals.currentP
+					* (claw.getOutputCurrent() - Globals.clawCloseCurrent);
+			if (volts > 0) {
 				claw.set(volts);
 			} else {
 				claw.set(0);

@@ -71,9 +71,10 @@ public class Robot extends IterativeRobot {
 
 		autoChooser = new SendableChooser();
 
-		autoChooser.addDefault("Square Auton", new SquareAuton());
-		autoChooser.addObject("Vision Seeker", new Seek());
+		autoChooser.addDefault("Drive Forward", new Autonomous3());
 		autoChooser.addObject("Nothing", new DoNothing(1));
+		autoChooser.addObject("Autonomous Right", new Autonomous1());
+		autoChooser.addObject("Autonomous Left", new Autonomous2());
 
 		SmartDashboard.putData("Autonomous Mode", autoChooser);
 		SmartDashboard.putString("version", "1.5.0");
@@ -98,6 +99,9 @@ public class Robot extends IterativeRobot {
 		Globals.clawRotateP = prefs.getDouble("clawRotateP", 0.0);
 		Globals.clawRotateI = prefs.getDouble("clawRotateI", 0.0);
 		Globals.clawRotateD = prefs.getDouble("clawRotateD", 0.0);
+		Globals.talonP = prefs.getDouble("talonP", 0.0);
+		Globals.talonI = prefs.getDouble("talonI", 0.0);
+		Globals.talonD = prefs.getDouble("talonD", 0.0);
 		SmartDashboard.putNumber("gyroP", Globals.gyroP);
 		SmartDashboard.putNumber("gyroI", Globals.gyroI);
 		SmartDashboard.putNumber("gyroD", Globals.gyroD);
@@ -134,18 +138,19 @@ public class Robot extends IterativeRobot {
 		Globals.clawRotateP = prefs.getDouble("clawRotateP", 0.0);
 		Globals.clawRotateI = prefs.getDouble("clawRotateI", 0.0);
 		Globals.clawRotateD = prefs.getDouble("clawRotateD", 0.0);
+		Globals.gyrocorrection = prefs.getDouble("gyrocorrection", 0);
 		SmartDashboard.putNumber("gyroP", Globals.gyroP);
 		SmartDashboard.putNumber("gyroI", Globals.gyroI);
 		SmartDashboard.putNumber("gyroD", Globals.gyroD);
 		SmartDashboard.putNumber("clawRotateP", Globals.clawRotateP);
 		SmartDashboard.putNumber("clawRotateI", Globals.clawRotateI);
 		SmartDashboard.putNumber("clawRotateD", Globals.clawRotateD);
-		Robot.drivetrain.disablePID();
+		/*Robot.drivetrain.disablePID();
 		Robot.drivetrain.setPID();
 		Robot.drivetrain.enablePID();
 		Robot.claw.setPID();
 		Robot.arm.reset();
-		Robot.claw.reset();
+		Robot.claw.reset();*/
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}

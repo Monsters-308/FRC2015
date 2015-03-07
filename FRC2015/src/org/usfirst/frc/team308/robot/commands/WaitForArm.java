@@ -4,18 +4,15 @@ import org.usfirst.frc.team308.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class MoveArm extends Command {
+public class WaitForArm extends Command {
 
-	double position;
-
-	public MoveArm(double pos) {
+	public WaitForArm(){
 		requires(Robot.arm);
-		position = pos;
+		setTimeout(0.5);
 	}
-
+	
 	@Override
 	protected void initialize() {
-		Robot.arm.setHeight(position);
 	}
 
 	@Override
@@ -24,7 +21,7 @@ public class MoveArm extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return true;
+		return Robot.arm.onTarget() && isTimedOut();
 	}
 
 	@Override
