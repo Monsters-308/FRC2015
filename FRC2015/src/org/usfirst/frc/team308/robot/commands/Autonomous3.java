@@ -6,7 +6,7 @@ public class Autonomous3 extends CommandGroup {
 	
 	public Autonomous3(){
 		addParallel(new MoveArm(0));
-		addSequential(new SimpleDrive(0.4,2,false));
+		addSequential(new SimpleDrive(0.4,3.5,false));
 	}
 
 }

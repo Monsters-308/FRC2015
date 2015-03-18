@@ -20,7 +20,7 @@ public class Globals {
 	public static double angletolerance = 15.0;
 	public static double gyroratetolerance = 3.0; // in degrees/sec
 
-	public static double gyrocorrection = 1.0;
+	public static double gyrocorrection = 0.005;
 	
 	public static double gyrodrift = 0; //per second
 
@@ -52,7 +52,7 @@ public class Globals {
 	public static double armSpeedTolerance = 50.0;
 	public static double drawerSlideHeightMinimum = 0.0;
 	
-	public static int armSoftLimitMax = (int)(73200*Globals.armLiftPracticeBotMultiplier);
+	public static int armSoftLimitMax = (int)(74500*Globals.armLiftPracticeBotMultiplier);
 	public static int armMinRotationHeight = 0;
 	public static int armMaxDelay = 5000;
 

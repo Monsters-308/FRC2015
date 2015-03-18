@@ -104,7 +104,7 @@ public class Claw extends Subsystem {
 			}
 		}
 		if (!DriverStation.getInstance().isAutonomous()) {
-			if (Robot.arm.getArmHeight() > Globals.armMinRotationHeight) {
+			if (Robot.arm.getArmHeight() >= Globals.armMinRotationHeight) {
 				addRotate(Globals.clawSpeed * Robot.oi.codriver.getRawAxis(3));
 			}
 			sweeper.set(Globals.sweeperMaxPercentage * Robot.oi.codriver.getY());

@@ -11,11 +11,11 @@
 package org.usfirst.frc.team308.robot.subsystems;
 
 import org.usfirst.frc.team308.robot.Globals;
+import org.usfirst.frc.team308.robot.Robot;
 import org.usfirst.frc.team308.robot.RobotMap;
 import org.usfirst.frc.team308.robot.commands.TeleopDrive;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.Gyro;
@@ -131,7 +131,7 @@ public class Drivetrain extends PIDSubsystem {
 	}
 
 	public double getGyro() {
-		return gyro.getRate();
+		return -gyro.getRate();
 	}
 
 	public double getSpeed() {
@@ -167,6 +167,10 @@ public class Drivetrain extends PIDSubsystem {
 	}
 
 	public void teleop(double x, double y, double rotation) {
+		if(Robot.oi.driver.getRawButton(1)){
+			x = 0.4*x;
+			y = 0.4*y;
+		}
 		x = deadzone(x, 0.1, 1.0);
 		y = deadzone(y, 0.1, 1.0);
 		rotation = rotation * 0.5;
@@ -180,17 +184,17 @@ public class Drivetrain extends PIDSubsystem {
 			t.start();
 			Globals.gyroIAccumulation = 0;
 			getPIDController().enable();
-			if (gyro.getRate() < 0) {
-				setSetpoint(-gyro.getRate() * gyro.getRate()
+			if (getGyro() < 0) {
+				setSetpoint(-getGyro() * getGyro()
 						* Globals.gyrocorrection);
 			} else {
-				setSetpoint(gyro.getRate() * gyro.getRate()
+				setSetpoint(getGyro() * getGyro()
 						* Globals.gyrocorrection);
 			}
 			mecanumDrive(x, y, Globals.gyroPIDOutput);
 		} else {
 			if (x == 0 && y == 0 && rotation == 0
-					&& Math.abs(gyro.getRate()) < Globals.gyroratetolerance) {
+					&& Math.abs(getGyro()) < Globals.gyroratetolerance) {
 				gyro.reset();
 				t.reset();
 				t.start();
@@ -303,7 +307,7 @@ public class Drivetrain extends PIDSubsystem {
 	}
 
 	public double getGyroAngle() {
-		return 4*(gyro.getAngle() - t.get() * Globals.gyrodrift);
+		return -(gyro.getAngle() - t.get() * Globals.gyrodrift);
 	}
 
 	public void drive(double distance, boolean strafe) {
