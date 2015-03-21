@@ -35,8 +35,8 @@ public class Claw extends Subsystem {
 		clawRotate.changeControlMode(ControlMode.Position);
 		sweeper.changeControlMode(ControlMode.PercentVbus);
 		sweeper2.changeControlMode(ControlMode.Follower);
-
 		sweeper2.set(13); // follow sweeper
+		sweeper2.reverseOutput(true);
 		// TODO tune rotate PID
 		clawRotate.setPID(Globals.clawRotateP, Globals.clawRotateI,
 				Globals.clawRotateD, 0.0, Globals.clawRotateIZone,
@@ -80,7 +80,7 @@ public class Claw extends Subsystem {
 			currentsum += current;
 			count += 1;
 		}
-		if (Globals.clawOpen) {
+		if (Globals.clawOpen && !Globals.clawClosed) {
 			if (claw.getOutputCurrent() == 0) {
 				claw.set(-Globals.clawOpenCurrent);
 			}
@@ -91,7 +91,7 @@ public class Claw extends Subsystem {
 			} else {
 				claw.set(0);
 			}
-		} else {
+		} else if (Globals.clawClosed && !Globals.clawOpen) {
 			if (claw.getOutputCurrent() == 0) {
 				claw.set(Globals.clawCloseCurrent);
 			}
@@ -102,6 +102,8 @@ public class Claw extends Subsystem {
 			} else {
 				claw.set(0);
 			}
+		} else {
+			claw.set(0);
 		}
 		if (!DriverStation.getInstance().isAutonomous()) {
 			if (Robot.arm.getArmHeight() >= Globals.armMinRotationHeight) {
@@ -167,7 +169,13 @@ public class Claw extends Subsystem {
 
 	public void closeClaw() {
 		resetclaw();
+		Globals.clawClosed = true;
+	}
+	
+	public void stopClaw() {
+		resetclaw();
 		Globals.clawOpen = false;
+		Globals.clawClosed = false;
 	}
 
 	public void setSweeper(double setting) {

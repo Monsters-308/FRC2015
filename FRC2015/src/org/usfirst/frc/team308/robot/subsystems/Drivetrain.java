@@ -111,7 +111,7 @@ public class Drivetrain extends PIDSubsystem {
 		// e.g. a sensor, like a potentiometer:
 		// yourPot.getAverageVoltage() / kYourMaxVoltage;
 		error = getPIDController().getSetpoint() - getGyroAngle();
-		error*=4;
+		error *= 4;
 		if (Math.abs(error) < Globals.gyroIZone
 				&& Math.abs(error) > Globals.angletolerance
 				&& error * lasterror >= 0) {
@@ -167,15 +167,23 @@ public class Drivetrain extends PIDSubsystem {
 	}
 
 	public void teleop(double x, double y, double rotation) {
-		if(Robot.oi.driver.getRawButton(1)){
-			x = 0.4*x;
-			y = 0.4*y;
+		if (Robot.oi.driver.getRawButton(1)) {
+			x = 0.4 * x;
+			y = 0.4 * y;
 		}
 		x = deadzone(x, 0.1, 1.0);
 		y = deadzone(y, 0.1, 1.0);
 		rotation = rotation * 0.5;
 		rotation = deadzone(rotation, 0.2, 1.0);
-		if (rotation != 0.0 || Globals.testMode) {
+		if (x == 0 && y == 0 && rotation == 0
+				&& Math.abs(getGyro()) < Globals.gyroratetolerance) {
+			gyro.reset();
+			t.reset();
+			t.start();
+			Globals.gyroIAccumulation = 0;
+			setSetpoint(0);
+		}
+		if ((x == 0.0 && y == 0) || rotation != 0 || Globals.testMode) {
 			disablePID();
 			mecanumDrive(x, y, rotation);
 		} else if (!getPIDController().isEnable()) {
@@ -185,22 +193,12 @@ public class Drivetrain extends PIDSubsystem {
 			Globals.gyroIAccumulation = 0;
 			getPIDController().enable();
 			if (getGyro() < 0) {
-				setSetpoint(-getGyro() * getGyro()
-						* Globals.gyrocorrection);
+				setSetpoint(-getGyro() * getGyro() * Globals.gyrocorrection);
 			} else {
-				setSetpoint(getGyro() * getGyro()
-						* Globals.gyrocorrection);
+				setSetpoint(getGyro() * getGyro() * Globals.gyrocorrection);
 			}
 			mecanumDrive(x, y, Globals.gyroPIDOutput);
 		} else {
-			if (x == 0 && y == 0 && rotation == 0
-					&& Math.abs(getGyro()) < Globals.gyroratetolerance) {
-				gyro.reset();
-				t.reset();
-				t.start();
-				Globals.gyroIAccumulation = 0;
-				setSetpoint(0);
-			}
 			mecanumDrive(x, y, Globals.gyroPIDOutput);
 		}
 	}
@@ -431,7 +429,7 @@ public class Drivetrain extends PIDSubsystem {
 		SmartDashboard.putNumber("rb2", talonRB.getClosedLoopError());
 		SmartDashboard.putNumber("lb2", talonLB.getClosedLoopError());
 		SmartDashboard.putNumber("lf integral", talonLF.GetIaccum());
-		SmartDashboard.putNumber("gyroangle", 4*gyro.getAngle());
+		SmartDashboard.putNumber("gyroangle", 4 * gyro.getAngle());
 		SmartDashboard.putNumber("gyroval", getGyroAngle());
 		SmartDashboard.putNumber("gyroError", getPIDController().getError());
 		SmartDashboard.putNumber("GyroIAcc", Globals.gyroIAccumulation);

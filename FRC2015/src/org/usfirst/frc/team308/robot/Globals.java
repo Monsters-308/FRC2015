@@ -3,7 +3,7 @@ package org.usfirst.frc.team308.robot;
 public class Globals {
 
 	//set to 1 for competition bot
-	public static final double armLiftPracticeBotMultiplier = 16.0/9.0;
+	public static final double armLiftPracticeBotMultiplier = 1.0;
 	
 	public static boolean testMode = false;
 	public static boolean simpleDrive = true;
@@ -46,15 +46,16 @@ public class Globals {
 	public static int liftIZone = 0;
 	public static int lifttolerance = 2000; // not important
 	public static int liftspeedtolerance = 100;
-	public static double liftSpeed = 1100.0*Globals.armLiftPracticeBotMultiplier;
+	public static double liftSpeed = 2000.0*Globals.armLiftPracticeBotMultiplier;
 	public static int calibrationHeight = (int)(-2000*Globals.armLiftPracticeBotMultiplier);
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
 	public static double drawerSlideHeightMinimum = 0.0;
 	
-	public static int armSoftLimitMax = (int)(74500*Globals.armLiftPracticeBotMultiplier);
+	public static int armSoftLimitMax = (int)(86500*Globals.armLiftPracticeBotMultiplier);
 	public static int armMinRotationHeight = 0;
 	public static int armMaxDelay = 5000;
+	public static int armToteHeight = 17500;
 
 	// claw rotate PID constants
 	public static double clawRotateP = 1;
@@ -77,12 +78,13 @@ public class Globals {
 	// claw constants
 	public static int clawOpenThreshold = 100;
 	public static int clawClosedThreshold = 10000;
-	public static boolean clawOpen = true;
+	public static boolean clawOpen = false;
+	public static boolean clawClosed = false;
 	public static double clawOpenCurrent = 0.4;
 	public static double clawCloseCurrent = 1.0;
 	public static double clawOpenMinVoltPercent = 0.5;
 	public static double currentP = 0.03;
-	public static double sweeperMaxPercentage = 0.5;
+	public static double sweeperMaxPercentage = 1.0;
 	public static double clawTimeout = 4000; // in milliseconds
 
 	// calibration
