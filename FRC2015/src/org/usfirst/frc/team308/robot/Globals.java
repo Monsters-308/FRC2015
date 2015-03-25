@@ -55,7 +55,7 @@ public class Globals {
 	public static int armSoftLimitMax = (int)(86500*Globals.armLiftPracticeBotMultiplier);
 	public static int armMinRotationHeight = 0;
 	public static int armMaxDelay = 5000;
-	public static int armToteHeight = 17500;
+	public static int armToteHeight = 19000;
 
 	// claw rotate PID constants
 	public static double clawRotateP = 1;
@@ -81,7 +81,7 @@ public class Globals {
 	public static boolean clawOpen = false;
 	public static boolean clawClosed = false;
 	public static double clawOpenCurrent = 0.4;
-	public static double clawCloseCurrent = 1.0;
+	public static double clawCloseCurrent = 1.1;
 	public static double clawOpenMinVoltPercent = 0.5;
 	public static double currentP = 0.03;
 	public static double sweeperMaxPercentage = 1.0;
