@@ -5,8 +5,8 @@ public class Globals {
 	//set to 1 for competition bot
 	public static final double armLiftPracticeBotMultiplier = 1.0;
 	
-	public static boolean testMode = false;
-	public static boolean simpleDrive = true;
+	public static boolean testMode = true;
+	public static boolean simpleDrive = false;
 
 	public static double gyroPIDOutput = 0.0;
 
@@ -52,10 +52,10 @@ public class Globals {
 	public static double armSpeedTolerance = 50.0;
 	public static double drawerSlideHeightMinimum = 0.0;
 	
-	public static int armSoftLimitMax = (int)(86500*Globals.armLiftPracticeBotMultiplier);
+	public static int armSoftLimitMax = (int)(30100.0*Globals.armLiftPracticeBotMultiplier);
 	public static int armMinRotationHeight = 0;
 	public static int armMaxDelay = 5000;
-	public static int armToteHeight = 19000;
+	public static int armToteHeight = (int)Math.round(19000.0*Globals.armLiftPracticeBotMultiplier);
 
 	// claw rotate PID constants
 	public static double clawRotateP = 1;
