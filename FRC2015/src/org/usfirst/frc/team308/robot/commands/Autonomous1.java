@@ -7,10 +7,10 @@ public class Autonomous1 extends CommandGroup {
 	public Autonomous1() {
 		addSequential(new CloseClaw());
 		addParallel(new ClawManager());
-		addSequential(new DoNothing(1.5));
+		addSequential(new DoNothing(3.0));
 		addParallel(new MoveArm(20000));
-		addSequential(new TimedRotate(100.0,1.0));
-		addSequential(new SimpleDrive(0.4,2.6,false));
+		addSequential(new TimedRotate(90,1.0));
+		addSequential(new TimedDrive(84.0, 2.0, false));
 	}
 
 }

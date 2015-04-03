@@ -18,7 +18,6 @@ public class Claw extends Subsystem {
 	CANTalon sweeper = RobotMap.sweeperTalon;
 	CANTalon sweeper2 = RobotMap.sweeperTalon2;
 	CANTalon claw = RobotMap.clawTalon;
-	CANTalon clawRotate = RobotMap.clawRotateTalon;
 
 	double clawTimeout = 0;
 
@@ -29,48 +28,30 @@ public class Claw extends Subsystem {
 
 	public Claw() {
 		claw.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		clawRotate.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
 		claw.changeControlMode(ControlMode.PercentVbus);
-		clawRotate.changeControlMode(ControlMode.Position);
 		sweeper.changeControlMode(ControlMode.PercentVbus);
 		sweeper2.changeControlMode(ControlMode.Follower);
 		sweeper2.set(13); // follow sweeper
 		sweeper2.reverseOutput(true);
-		// TODO tune rotate PID
-		clawRotate.setPID(Globals.clawRotateP, Globals.clawRotateI,
-				Globals.clawRotateD, 0.0, Globals.clawRotateIZone,
-				Globals.talonRampRate, 0);
-		clawRotate.reverseSensor(true);
 		claw.reverseSensor(true);
 
 		sweeper.enableControl();
 		sweeper2.enableControl();
 		claw.enableControl();
-		clawRotate.enableControl();
 
 		resetTimer();
 		// TODO limit switches
 	}
 
 	public void reset() {
-		clawRotate.ClearIaccum();
-		clawRotate.setPosition(0);
-		clawRotate.set(0);
 		claw.setPosition(0);
 	}
 
 	public void moveClaw() {
-		SmartDashboard.putNumber("Claw Error", clawRotate.getClosedLoopError());
-		SmartDashboard.putNumber("Claw setpoint", clawRotate.getSetpoint());
-		SmartDashboard.putNumber("Claw Position", clawRotate.getPosition());
 		SmartDashboard.putNumber("Claw Grab Current", claw.getOutputCurrent());
 		SmartDashboard.putNumber("Claw Grab Voltage",
 				claw.getSetpoint() * claw.getBusVoltage());
-		SmartDashboard
-				.putBoolean("limit1", clawRotate.isFwdLimitSwitchClosed());
-		SmartDashboard
-				.putBoolean("limit2", clawRotate.isRevLimitSwitchClosed());
 		SmartDashboard.putNumber("Claw grab posistion", claw.getPosition());
 		double current = new PowerDistributionPanel().getCurrent(15);
 		if (count > 15) {
@@ -114,23 +95,11 @@ public class Claw extends Subsystem {
 	}
 
 	public void addRotate(double pos) {
-		if (clawRotate.getSetpoint() + pos > Globals.clawRotateSoftLimitMax) {
-			clawRotate.set(Globals.clawRotateSoftLimitMax);
-		} else if (clawRotate.getSetpoint() + pos < 0) {
-			clawRotate.set(0);
-		} else {
-			clawRotate.set(clawRotate.getSetpoint() + pos);
-		}
+		
 	}
 
 	public void rotateClaw(double pos) {
-		if (pos > Globals.clawRotateSoftLimitMax) {
-			clawRotate.set(Globals.clawRotateSoftLimitMax);
-		} else if (pos < 0) {
-			clawRotate.set(0);
-		} else {
-			clawRotate.set(pos);
-		}
+		
 	}
 
 	@Override
@@ -139,27 +108,20 @@ public class Claw extends Subsystem {
 	}
 
 	public int rotateError() {
-		return clawRotate.getClosedLoopError();
+		return 0;
 	}
 
 	public void preCalibration() {
-		clawRotate.changeControlMode(ControlMode.PercentVbus);
-		clawRotate.set(Globals.calibrationSpeed);
 	}
 
 	public void startCalibration() {
-		clawRotate.changeControlMode(ControlMode.PercentVbus);
-		clawRotate.set(-Globals.calibrationSpeed);
 	}
 
 	public void stopCalibration() {
-		clawRotate.set(0);
-		clawRotate.changeControlMode(ControlMode.Position);
-		clawRotate.setPosition(Globals.clawRotateSoftLimitMin);
 	}
 
 	public boolean limitSwitch() {
-		return clawRotate.isRevLimitSwitchClosed();
+		return true;
 	}
 
 	public void openClaw() {
@@ -189,11 +151,6 @@ public class Claw extends Subsystem {
 	}
 
 	public void setPID() {
-		clawRotate.disableControl();
-		clawRotate.setPID(Globals.clawRotateP, Globals.clawRotateI,
-				Globals.clawRotateD, 0.0, Globals.clawRotateIZone,
-				Globals.talonRampRate, 0);
-		clawRotate.enableControl();
 	}
 
 	public void resetTimer() {
@@ -201,17 +158,10 @@ public class Claw extends Subsystem {
 	}
 
 	public void adjustClaw(boolean positive) {
-		if (positive) {
-			clawRotate.setPosition(clawRotate.getPosition()
-					+ Globals.adjustCount);
-		} else {
-			clawRotate.setPosition(clawRotate.getPosition()
-					- Globals.adjustCount);
-		}
 	}
 
 	public double getRotateSetpoint() {
-		return clawRotate.getSetpoint();
+		return 0;
 	}
 
 }

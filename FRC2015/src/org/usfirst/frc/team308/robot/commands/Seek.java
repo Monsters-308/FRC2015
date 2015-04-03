@@ -18,13 +18,13 @@ public class Seek extends Command {
 
 	@Override
 	protected void execute() {
-		if (Robot.vision.lastDetected() < 500.0) {
-			Robot.drivetrain.rotate(Robot.vision.angleError());
-			Robot.drivetrain.mecanumDrive(0, 0, Globals.gyroPIDOutput);
-		} else {
-			Robot.drivetrain.disablePID();
-			Robot.drivetrain.mecanumDrive(0, 0, 0.02);
-		}
+		//if (Robot.vision.lastDetected() < 500.0) {
+		//	Robot.drivetrain.rotate(Robot.vision.angleError());
+		//	Robot.drivetrain.mecanumDrive(0, 0, Globals.gyroPIDOutput);
+		//} else {
+		//	Robot.drivetrain.disablePID();
+		//	Robot.drivetrain.mecanumDrive(0, 0, 0.02);
+		//}
 		Timer.delay(0.1);
 	}
 

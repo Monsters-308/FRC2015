@@ -53,6 +53,7 @@ public class Arm extends Subsystem {
 		SmartDashboard.putNumber("Arm Position", liftR.getPosition());
 		SmartDashboard.putNumber("Arm Voltage", liftR.getOutputVoltage()
 				/ new PowerDistributionPanel().getVoltage());
+		SmartDashboard.putNumber("Arm Speed", liftR.getSpeed());
 	}
 
 	public void addHeight(double height) {

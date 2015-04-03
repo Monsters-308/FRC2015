@@ -102,8 +102,6 @@ public class OI {
 		SmartDashboard.putData("Close Arm", new CloseClaw());
 		SmartDashboard.putData("Rotate Arm", new RotateClaw(1000));
 		SmartDashboard.putData("Lift Arm", new MoveArm(1000));
-		SmartDashboard.putData("Close", new CloseDrawerSlides());
-		SmartDashboard.putData("Open", new OpenDrawerSlides());
 		SmartDashboard.putData("Ping", new RunSensor());
 	}
 

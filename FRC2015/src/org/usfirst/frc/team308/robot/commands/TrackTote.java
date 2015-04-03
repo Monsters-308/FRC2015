@@ -9,7 +9,7 @@ public class TrackTote extends Command {
 	processinparallel visionProcessing;
 
 	public TrackTote() {
-		requires(Robot.vision);
+		//requires(Robot.vision);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class TrackTote extends Command {
 		public void run() {
 			while (running) {
 				try {
-					Robot.vision.process();
+					//Robot.vision.process();
 				} catch (Exception e) {
 				}
 			}
