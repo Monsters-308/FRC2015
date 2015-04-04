@@ -21,8 +21,8 @@ public class ArmManager extends Command {
 			Robot.arm.addHeight(Globals.liftSpeed * -Robot.oi.codriver.getZ()
 					* Robot.oi.codriver.getZ());
 		} else {
-			Robot.arm.addHeight(Globals.liftSpeed * Robot.oi.codriver.getZ()
-					* Robot.oi.codriver.getZ());
+				Robot.arm.addHeight(Globals.liftSpeed
+						* Robot.oi.codriver.getZ() * Robot.oi.codriver.getZ());
 		}
 		Robot.arm.putValues();
 	}

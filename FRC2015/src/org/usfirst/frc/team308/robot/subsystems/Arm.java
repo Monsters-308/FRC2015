@@ -53,18 +53,28 @@ public class Arm extends Subsystem {
 		SmartDashboard.putNumber("Arm Position", liftR.getPosition());
 		SmartDashboard.putNumber("Arm Voltage", liftR.getOutputVoltage()
 				/ new PowerDistributionPanel().getVoltage());
+		SmartDashboard.putNumber("Arm2 Voltage", liftL.getOutputVoltage()
+				/ new PowerDistributionPanel().getVoltage());
 		SmartDashboard.putNumber("Arm Speed", liftR.getSpeed());
 	}
 
+	public void resetArm() {
+		liftR.set(liftR.getPosition());
+	}
+
 	public void addHeight(double height) {
-		/*if (liftR.getSetpoint() >= Globals.armMinRotationHeight
-				&& liftR.getSetpoint() + height < Globals.armMinRotationHeight) {
-			if (Robot.claw.getRotateSetpoint() != 0
-					&& Robot.claw.getRotateSetpoint() != Globals.clawRotateSoftLimitMax) {
-				liftR.set(Globals.armMinRotationHeight);
-				return;
-			}
-		}*/
+		/*
+		 * if (liftR.getSetpoint() >= Globals.armMinRotationHeight &&
+		 * liftR.getSetpoint() + height < Globals.armMinRotationHeight) { if
+		 * (Robot.claw.getRotateSetpoint() != 0 &&
+		 * Robot.claw.getRotateSetpoint() != Globals.clawRotateSoftLimitMax) {
+		 * liftR.set(Globals.armMinRotationHeight); return; } }
+		 * daniel.readscreen(true);
+		 * doubleforwardslash.add(last_line);
+		 * typingmorecode(7);
+		 * ohman.said(People.students.team308.Daniel);
+		 * 
+		 */
 		if (liftR.getSetpoint() + height > Globals.armSoftLimitMax) {
 			liftR.set(Globals.armSoftLimitMax);
 		} else if (liftR.getSetpoint() + height < 0) {
@@ -73,7 +83,7 @@ public class Arm extends Subsystem {
 				&& height != 0) {
 			if (liftR.getSetpoint() > liftR.getPosition() && height > 0) {
 				liftR.set(liftR.getPosition() + Globals.armMaxDelay);
-			} else if (liftR.getSetpoint() < liftR.getPosition() && height < 0){
+			} else if (liftR.getSetpoint() < liftR.getPosition() && height < 0) {
 				liftR.set(liftR.getPosition() - Globals.armMaxDelay);
 			}
 		} else {

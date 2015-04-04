@@ -30,8 +30,8 @@ public class Globals {
 	public static double talonD = 0.0;
 	public static int iZone = 1061;
 
-	public static double distancetolerance = 2000; // in ticks
-	public static double speedtolerance = 50.0; // encoder ticks/100
+	public static double distancetolerance = 3000; // in ticks
+	public static double speedtolerance = 100.0; // encoder ticks/100
 												// milliseconds
 
 	// motor velocity PID constants
@@ -44,9 +44,9 @@ public class Globals {
 	public static double liftI = 0.0001;
 	public static double liftD = 15.0;
 	public static int liftIZone = 10000;
-	public static int lifttolerance = 2000; // not important
+	public static int lifttolerance = 4000; // not important
 	public static int liftspeedtolerance = 100;
-	public static double liftSpeed = 2000.0*Globals.armLiftPracticeBotMultiplier;
+	public static double liftSpeed = 2500.0*Globals.armLiftPracticeBotMultiplier;
 	public static int calibrationHeight = (int)(-2000*Globals.armLiftPracticeBotMultiplier);
 	public static double armDistanceTolerance = 100; // in ticks
 	public static double armSpeedTolerance = 50.0;
@@ -54,7 +54,7 @@ public class Globals {
 	
 	public static int armSoftLimitMax = (int)(86500.0*Globals.armLiftPracticeBotMultiplier);
 	public static int armMinRotationHeight = 0;
-	public static int armMaxDelay = 5000;
+	public static int armMaxDelay = 6000;
 	public static int armToteHeight = (int)Math.round(19000.0*Globals.armLiftPracticeBotMultiplier);
 
 	// claw rotate PID constants
